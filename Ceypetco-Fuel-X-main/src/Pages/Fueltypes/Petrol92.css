@@ -1,0 +1,107 @@
+/* Container styling */
+.petrol92-container {
+    background-color: #06132a; /* Dark navy background */
+    color: white; /* White text color */
+    min-height: 100vh; /* Full height */
+    padding: 20px;
+    text-align: center; /* Center content */
+  }
+  
+  /* Title styling */
+  .title {
+    background-color: #d9534f; /* Red background for title */
+    color: white; /* White text */
+    padding: 10px;
+    font-size: 24px;
+    border-radius: 5px; /* Rounded corners */
+    margin-bottom: 20px;
+  }
+  
+  /* Pump section styling */
+  .pump-section {
+    background-color: #222; /* Dark background for pump section */
+    padding: 20px;
+    margin: 20px auto; /* Center horizontally */
+    width: 60%; /* Responsive width */
+    border-radius: 8px; /* Rounded corners */
+    text-align: left; /* Left-align text */
+  }
+  
+  .pump-section h2 {
+    background-color: #444; /* Dark grey header */
+    padding: 10px;
+    margin-bottom: 15px;
+    border-radius: 5px;
+  }
+  
+  /* Form label styling */
+  label {
+    display: block; /* Make labels block for spacing */
+    margin: 10px 0 5px; /* Spacing around labels */
+    font-weight: bold; /* Bold text */
+  }
+  
+  /* Input styling */
+  input {
+    width: 100%; /* Full width */
+    padding: 8px; /* Padding for better appearance */
+    background: #333; /* Dark input background */
+    color: white; /* White text */
+    border: none; /* No borders */
+    border-radius: 5px; /* Rounded input corners */
+    margin-bottom: 10px; /* Spacing below inputs */
+    font-size: 16px; /* Readable input text */
+  }
+  
+  /* Total sale styling */
+  .total {
+    font-size: 32px; /* Large total text */
+    color: #cd1508; /* Red for emphasis */
+    margin-top: 20px; /* Spacing above */
+  }
+  
+ 
+  /* Octane 92 Petrol Button Styling */
+  .octane92-btn {
+    background-color: #d9534f; /* Red background */
+    color: white; /* White text */
+    padding: 12px 24px; /* Button padding */
+    font-size: 18px; /* Button text size */
+    border: none; /* No border */
+    border-radius: 5px; /* Rounded corners */
+    cursor: pointer; /* Pointer cursor */
+    margin-top: 30px; /* Space above button */
+    transition: background-color 0.3s ease; /* Smooth hover */
+    display: inline-block; /* Inline button */
+    text-decoration: none; /* No underline */
+  }
+  
+  .octane92-btn:hover {
+    background-color: #c9302c; /* Darker red on hover */
+  }
+  
+  /* Responsive adjustments */
+  @media (max-width: 768px) {
+    .pump-section {
+      width: 90%; /* Increase width for small screens */
+    }
+  
+    .navbar {
+      flex-direction: column; /* Stack navbar items */
+    }
+  
+    .nav-links {
+      flex-direction: column; /* Stack links */
+      text-align: center; /* Center links */
+    }
+  
+    .nav-links li {
+      margin: 10px 0; /* Add space between links */
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .pump-section {
+      width: 100%; /* Full width for very small screens */
+    }
+  }

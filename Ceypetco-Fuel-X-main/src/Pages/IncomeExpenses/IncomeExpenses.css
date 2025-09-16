@@ -1,0 +1,259 @@
+/* Income-Expenses Container */
+.income-expenses-container {
+  min-height: 100vh;
+  background: #0a1833;
+  padding: 40px 0 60px 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-family: 'Segoe UI', Arial, sans-serif;
+}
+
+/* Section Styling */
+.ie-section {
+  background: none;
+  border: 2px solid #fff;
+  border-radius: 6px;
+  margin-bottom: 32px;
+  width: 95%;
+  max-width: 900px;
+  padding: 18px 18px 28px 18px;
+}
+
+.ie-section h2 {
+  color: #fff;
+  font-size: 2rem;
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 18px;
+  letter-spacing: 1px;
+  text-shadow: 0 2px 8px #0002;
+}
+
+/* Table Row Layout */
+.ie-table-row {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: flex-start;
+  gap: 24px;
+  margin-bottom: 18px;
+}
+
+/* Labels */
+.ie-labels {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  min-width: 180px;
+  color: #fff;
+  font-size: 1.1rem;
+}
+
+.ie-labels .bold {
+  font-weight: 700;
+}
+
+
+
+
+/* Bars */
+.ie-bars {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  min-width: 180px;
+  margin-right: 24px;
+}
+
+.ie-bar {
+  height: 22px;
+  background: #e0e0e0;
+  border-radius: 6px;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  transition: width 0.5s ease;
+}
+
+/* Dynamic bar widths based on data-amount */
+.ie-bar[data-amount="50000"] { width: 250px; }
+.ie-bar[data-amount="40000"] { width: 230px; }
+.ie-bar[data-amount="30000"] { width: 200px; }
+.ie-bar[data-amount="20000"] { width: 180px; }
+.ie-bar[data-amount="15000"] { width: 150px; }
+.ie-bar[data-amount="10000"] { width: 100px; }
+
+/* Bar labels */
+.ie-bar span {
+  position: absolute;
+  left: 8px;
+  color: #222;
+  font-size: 0.9rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+/* Income bars green */
+.ie-income .ie-bar {
+  background: #b6f7c1; /* Match total-box green */
+}
+
+/* Expense bars red */
+.ie-expenses .ie-bar {
+  background: #ff9999; /* Lighter red for contrast */
+}
+
+/* Tooltip for bars */
+.ie-bar:hover::after {
+  content: attr(data-amount) ' Rs';
+  position: absolute;
+  top: -30px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #fff;
+  color: #222;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  z-index: 10;
+  white-space: nowrap;
+}
+
+/* Totals */
+.ie-totals {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  margin-left: 24px;
+}
+
+.ie-total-box {
+  background: #b6f7c1;
+  color: #222;
+  border-radius: 8px;
+  padding: 12px 18px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  min-width: 220px;
+  box-shadow: 0 2px 8px #0001;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: center;
+}
+
+.ie-total-box span:first-child {
+  font-size: 1rem;
+  color: #222;
+  font-weight: 500;
+  align-self: flex-start;
+}
+
+/* Main Total */
+.ie-main-total {
+  margin: 18px auto 0 auto;
+  background: #000;
+  color: #fff;
+  border: 3px solid #ff2222;
+  border-radius: 6px;
+  font-size: 1.3rem;
+  font-weight: 700;
+  padding: 8px 32px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 18px;
+  max-width: 350px;
+}
+
+.ie-main-total.expense {
+  background: #000;
+  color: #fff;
+  border: 3px solid #ff2222;
+}
+
+/* Profit Section */
+.ie-profit-section {
+  width: 95%;
+  max-width: 900px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.ie-profit-section h2 {
+  color: #fff;
+  font-size: 1.4rem;
+  font-weight: 700;
+  margin-bottom: 18px;
+}
+
+.ie-profit-box {
+  background: #ff2222;
+  color: #fff;
+  font-size: 1.4rem;
+  font-weight: 700;
+  border-radius: 6px;
+  padding: 16px 0;
+  max-width: 320px;
+  margin: 0 auto;
+  border: 3px solid #fff;
+  box-shadow: 0 2px 8px #0002;
+}
+
+/* Responsive Design */
+@media (max-width: 700px) {
+  .ie-section, .ie-profit-section {
+    padding: 10px 2px 18px 2px;
+    width: 99%;
+  }
+
+  .ie-table-row {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .ie-totals {
+    margin-left: 0;
+  }
+
+  .ie-bars {
+    margin-right: 0;
+    min-width: 100%;
+  }
+
+  .ie-bar {
+    width: 100% !important; /* Full width for smaller screens */
+    height: 20px;
+  }
+
+  .ie-bar span {
+    font-size: 0.8rem;
+    left: 6px;
+  }
+
+  .ie-labels {
+    min-width: 100%;
+    text-align: left;
+  }
+
+  .ie-total-box {
+    min-width: 100%;
+    font-size: 1rem;
+  }
+
+  .ie-total-box span:first-child {
+    font-size: 0.9rem;
+  }
+
+  .ie-main-total {
+    font-size: 1.1rem;
+    max-width: 100%;
+  }
+
+  .ie-profit-box {
+    font-size: 1.2rem;
+    max-width: 100%;
+  }
+}

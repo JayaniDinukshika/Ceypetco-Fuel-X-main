@@ -1,0 +1,170 @@
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+body {
+  background-color: #7489ac;
+  color: #333;
+}
+
+/* Main container */
+.register-container {
+  display: flex;
+  height: 100vh;
+  overflow: hidden;
+
+}
+
+/* Left - Form Section */
+.form-section {
+  flex: 1;
+  padding: 60px 50px;
+  background-color: #f7f1f1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.form-section h2 {
+  font-size: 28px;
+  color: #2b7cff;
+  margin-bottom: 30px;
+}
+
+.form-box {
+  max-width: 520px;
+  height: 600px;
+ border-radius:10px ;
+  background-color: #b5c5e2;
+  margin-left: 80px;
+}
+
+.register-form .form-group {
+  margin-bottom: 20px;
+}
+
+.register-form label {
+  font-weight: 600;
+  font-size: 15px;
+  margin-bottom: 6px;
+  display: block;
+  color: #444;
+}
+
+.register-form input {
+  width: 90%;
+  padding: 12px 14px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  outline: none;
+  transition: 0.3s ease;
+}
+
+.register-form input:focus {
+  border-color: #2b7cff;
+}
+
+/* Password input with toggle */
+.password-input {
+  position: relative;
+}
+
+.password-input input {
+  padding-right: 40px;
+}
+
+.toggle-password {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  font-size: 18px;
+}
+
+/* Submit button */
+.submit-btn {
+  width: 90%;
+  padding: 12px;
+  background-color: #2b7cff;
+  color: #fff;
+  font-size: 16px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: 0.3s ease;
+}
+
+.submit-btn:hover {
+  background-color: #1a5ed9;
+}
+
+/* Login link */
+.login-link {
+  text-align: center;
+  margin-top: 20px;
+  font-size: 14px;
+  color: #444;
+}
+
+.login-link a {
+  color: #2b7cff;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.login-link a:hover {
+  text-decoration: underline;
+}
+
+/* Right - Welcome section */
+.welcome-section {
+  flex: 1;
+  background-color: #041735;
+  color: #eaeff6;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 60px;
+  text-align: center;
+}
+
+.welcome-section h1 {
+  font-size: 32px;
+  margin-bottom: 20px;
+}
+
+.welcome-section p {
+  font-size: 16px;
+  max-width: 500px;
+  margin-bottom: 40px;
+}
+
+.welcome-section img {
+  max-width: 80%;
+  height: auto;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* Responsive design */
+@media screen and (max-width: 960px) {
+  .register-container {
+    flex-direction: column;
+  }
+
+  .form-section, .welcome-section {
+    width: 100%;
+    height: auto;
+    padding: 40px 30px;
+  }
+
+  .welcome-section {
+    display: none; /* Optional: hide on small screens */
+  }
+}

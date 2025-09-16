@@ -1,0 +1,113 @@
+/* Main container styling */
+.superdiesel-container {
+  background-color: #06132a; /* Dark background */
+  color: white; /* White text */
+  min-height: 100vh; /* Full height */
+  padding: 20px;
+  text-align: center; /* Center align the content */
+}
+
+
+/* Details card styling */
+
+.details-card {
+  background: #d9caca;
+  padding: 20px;
+  border-radius: 12px;
+  max-width: 800px;
+  margin: 0 auto;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+
+/* Title styling */
+.title {
+  background-color: #2c3e50; /* A diesel-themed dark blue header */
+  color: white;
+  padding: 15px;
+  font-size: 28px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+
+/* Pump section styling */
+.pump-section {
+  background-color: #222;
+  padding: 20px;
+  margin: 20px 0;
+  border-radius: 8px;
+  text-align: left;
+  max-width: 500px;          /* Optional: Limit width */
+  width: 100%;               /* Make it responsive */
+}
+
+.pump-section h2 {
+  background-color: #444;
+  padding: 10px;
+  margin-bottom: 15px;
+  border-radius: 5px;
+  
+}
+
+/* Form label styling */
+label {
+  display: block;
+  margin: 10px 0 5px;
+  font-weight: bold;
+}
+
+/* Input field styling */
+input {
+  width: 100%;
+  padding: 8px;
+  background: #333;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  margin-bottom: 10px;
+}
+
+/* Total sale styling */
+.total {
+  font-size: 32px; /* Larger font */
+  color: #cd1508; /* Diesel blue text */
+  margin-top: 20px;
+}
+
+/* Button styling */
+.diesel-btn {
+  background-color: #f39c12; /* Diesel blue button */
+  color: white;
+  padding: 10px 20px;
+  font-size: 18px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer; /* Pointer cursor */
+  transition: background 0.3s ease; /* Smooth hover effect */
+}
+/* Hover effect for buttons */    
+.diesel-btn:hover {
+  background-color: #e67e22; /* Darker blue on hover */
+}
+.octane92-btn,
+.petrol95-btn {
+  background-color: #f39c12; /* Orange button */
+  color: white;
+  padding: 10px 20px;
+  font-size: 18px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer; /* Pointer cursor */
+  transition: background 0.3s ease; /* Smooth hover effect */
+}
+
+/* Hover effect for buttons */
+.octane92-btn:hover,
+.petrol95-btn:hover {
+  background-color: #e67e22; /* Darker orange on hover */
+}
+
+/* Button spacing */
+.octane92-btn {
+  margin-bottom: 10px;
+}

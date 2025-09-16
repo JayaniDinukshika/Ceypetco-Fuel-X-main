@@ -1,0 +1,63 @@
+.summary-container {
+  height: 100vh;
+  width: 100%;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.overlay {
+  background-color: rgba(231, 222, 222, 0.6); /* Dark overlay for contrast */
+  border-radius: 16px;
+  padding: 40px 30px;
+  text-align: center;
+  width: 100%;
+  width: 600px;
+  height:300px;
+  color: #401703;
+  box-shadow: 0 8px 38px rgba(0, 0, 0, 0.25);
+  border: #401703 2px solid;
+  margin-top: 10px;
+}
+
+.title {
+  font-size: 28px;
+  font-weight: bold;
+  margin-bottom: 0px;
+  margin-top: -20px;
+  align: center;
+}
+
+.button-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+  margin-top: -30px;
+}
+
+.summary-btn {
+  margin-top: 100px;
+  padding: 15px 0;
+  background-color: #1e1e2f;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.summary-btn:hover {
+  transform: translateY(-2px);
+}
+
+/* Remove underline from Link components */
+a {
+  text-decoration: none;
+}

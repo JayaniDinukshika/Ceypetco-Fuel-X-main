@@ -1,0 +1,176 @@
+/* src/Pages/Landing.css */
+
+.landing-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background: linear-gradient(to right, #e0ecf6, #ffffff);
+  font-family: 'Segoe UI', sans-serif;
+  color: #1a1a1a;
+  overflow: hidden;
+}
+
+/* Hero Section */
+.hero {
+  display: flex;
+  flex: 1;
+  padding: 80px 60px;
+  align-items: center;
+  justify-content: space-between;
+  animation: fadeInUp 1s ease-out;
+}
+
+.hero-text {
+  flex: 1;
+  max-width: 600px;
+  animation: slideInLeft 1s ease;
+}
+
+.hero-text h1 {
+  font-size: 48px;
+  font-weight: bold;
+  margin-bottom: 20px;
+  color: #00274d;
+}
+
+.hero-text h2 {
+  font-size: 36px;
+  font-weight: bold;
+  margin-bottom: 20px;
+  color: #d63609;
+} 
+
+.hero-text p {
+  font-size: 20px;
+  line-height: 1.6;
+  margin-bottom: 30px;
+  color: #333;
+}
+
+.cta-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  align-items: center;
+}
+
+.auth-buttons {
+  display: flex;
+  gap: 16px;
+}
+
+.btn {
+  padding: 14px 28px;
+  font-size: 16px;
+  border-radius: 8px;
+  text-decoration: none;
+  text-align: center;
+  transition: all 0.3s ease-in-out;
+}
+
+.cta-btn {
+  background-color: #003566;
+  color: #fff;
+  font-weight: 600;
+  ;
+}
+
+.cta-btn:hover {
+  background-color: #001f3f;
+}
+
+.login-btn {
+  background-color: #ffffff;
+  border: 1px solid #003566;
+  color: #003566;
+}
+
+.login-btn:hover {
+  background-color: #b6c3eb;
+}
+
+.register-btn {
+  background-color: #ffffff;
+  border: 1px solid #003566;
+  color: #003566;
+}
+
+.register-btn:hover {
+  background-color: #b6c3eb;
+}
+
+/* Hero Image */
+.hero-image {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  animation: slideInRight 1s ease;
+}
+
+.hero-image img {
+  max-width: 90%;
+  height: auto;
+  border-radius: 12px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+}
+
+/* Footer */
+.landing-footer {
+  text-align: center;
+  padding: 20px;
+  background-color: #f1f5f9;
+  color: #666;
+  font-size: 14px;
+}
+
+/* Animations */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-60px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(60px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .hero {
+    flex-direction: column;
+    padding: 40px 20px;
+    text-align: center;
+  }
+
+  .auth-buttons {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .hero-image {
+    margin-top: 30px;
+  }
+}

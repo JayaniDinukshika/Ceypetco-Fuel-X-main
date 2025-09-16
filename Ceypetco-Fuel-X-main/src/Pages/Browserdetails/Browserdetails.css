@@ -1,0 +1,314 @@
+/* ==========================
+   Browserdetails Page Layout
+   ========================== */
+.browser-details {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background-color: #f5f5f5;
+}
+
+.browser-details-container {
+  flex: 1;
+  padding: 20px;
+  text-align: center;
+  background-color: #0a192f;
+  color: #fff;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+/* ==========================
+   Header Section
+   ========================== */
+.header-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.title {
+  font-size: 28px;
+  font-weight: bold;
+  margin: 20px 0;
+  color: #fff;
+}
+
+.fuel-tank-image {
+  width: 100%;
+  max-width: 400px;
+  height: auto;
+  margin-bottom: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+/* ==========================
+   Table Styling
+   ========================== */
+.table-container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto 20px;
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #fff;
+  color: #222;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+th, td {
+  padding: 12px;
+  border: 1px solid #ddd;
+  text-align: center;
+  font-size: 14px;
+}
+
+th {
+  background-color: #1e1e2f;
+  color: #fff;
+  font-weight: bold;
+}
+
+/* ==========================
+   Input & Select Fields
+   ========================== */
+input, select {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+  background-color: #f9f9f9;
+  color: #222;
+  box-sizing: border-box;
+  transition: all 0.2s ease;
+}
+
+input:focus, select:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px #ffd600;
+}
+
+.input-error {
+  border: 1px solid #ff6b6b;
+  background-color: #ffe6e6;
+}
+
+/* ==========================
+   Buttons
+   ========================== */
+.pending-btn,
+.checked-btn,
+.delete-btn,
+.add-new-btn,
+.submit-btn,
+.history-btn {
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: bold;
+  padding: 10px 16px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.pending-btn {
+  background: #ff9500;
+  color: #fff;
+}
+.pending-btn:hover {
+  background: #e68a00;
+}
+
+.checked-btn {
+  background: #4bc0c0;
+  color: #fff;
+}
+.checked-btn:hover {
+  background: #3aa0a0;
+}
+
+.delete-btn {
+  background: #ff6b6b;
+  color: #fff;
+}
+.delete-btn:hover {
+  background: #e55a5a;
+}
+
+.add-new-btn {
+  background: #1e1e2f;
+  color: #fff;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+.add-new-btn:hover {
+  background: #ffd600;
+  color: #401703;
+}
+
+.submit-btn {
+  background: #28a745;
+  color: #fff;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+.submit-btn:hover {
+  background: #218838;
+}
+
+.history-btn {
+  background: #007bff;
+  color: #fff;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+.history-btn:hover {
+  background: #0069d9;
+}
+
+.button-container {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-top: 20px;
+}
+
+/* ==========================
+   Status & Error Messages
+   ========================== */
+.error-message,
+.submit-message.error {
+  color: #ff6b6b;
+  font-size: 14px;
+  margin-bottom: 10px;
+  background: #ffe6e6;
+  padding: 10px;
+  border-radius: 4px;
+}
+
+.submit-message.success {
+  color: #28a745;
+  font-size: 14px;
+  margin-bottom: 10px;
+  background: #e6ffed;
+  padding: 10px;
+  border-radius: 4px;
+}
+
+/* ==========================
+   History Modal
+   ========================== */
+.history-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+  
+}
+  
+.history-content {
+  background: #fff;
+  color: #222;
+  padding: 20px;
+  border-radius: 10px;
+  width: 90%;
+  max-width: 1000px;
+  max-height: 80vh;   /* ✅ Restrict height */
+  overflow: hidden;   /* Hide outside scroll */
+  display: flex;
+  flex-direction: column;
+}
+  
+
+.history-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+  
+.close--btn {
+  
+  border: none;
+  color: black;
+  font-size: 20px;
+  font-weight: bold;
+  cursor: pointer;
+  border-radius: 4px;
+  padding: 5px 10px;
+  transition: background 0.3s ease;
+}
+
+.close--btn:hover {
+  color: white;
+  background: #cc0000;
+}
+
+.history-table-container {
+  flex: 1;                 /* Take remaining space */
+  overflow-y: auto;        /* ✅ Scroll if content too tall */
+  border-top: 1px solid #ddd;
+  padding-top: 10px;
+}
+
+
+/* ==========================
+   Responsive Design
+   ========================== */
+@media (max-width: 768px) {
+  .browser-details-container {
+    padding: 10px;
+  }
+
+  .title {
+    font-size: 24px;
+  }
+
+  .fuel-tank-image {
+    max-width: 300px;
+  }
+
+  table {
+    font-size: 12px;
+  }
+
+  th, td {
+    padding: 8px;
+  }
+
+  input, select {
+    padding: 6px;
+    font-size: 12px;
+  }
+
+  .pending-btn, .checked-btn, .delete-btn {
+    padding: 6px 8px;
+    font-size: 12px;
+  }
+
+  .add-new-btn, .submit-btn, .history-btn {
+    padding: 10px 15px;
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  .title {
+    font-size: 20px;
+  }
+
+  .fuel-tank-image {
+    max-width: 200px;
+  }
+}

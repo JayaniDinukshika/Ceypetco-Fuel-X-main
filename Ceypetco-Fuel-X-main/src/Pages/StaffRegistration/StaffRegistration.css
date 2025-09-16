@@ -1,0 +1,133 @@
+.staff-registration-container {
+  background: rgba(255,255,255,0.05);
+  padding: 24px;
+  border-radius: 16px;
+  max-width: 600px;
+  margin: 0 auto;
+  color: #fff;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.registration-form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-bottom: 24px;
+}
+
+.registration-form input {
+  padding: 10px;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  background-color: #f0f0f0;
+  color: #333;
+}
+
+.registration-form button {
+  background-color: #f94646ff;
+  border: none;
+  padding: 12px;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+  color: #fdfdfdff;
+  transition: 0.3s;
+}
+
+.registration-form button:hover {
+  background-color: #ce0000ff;
+}
+
+.registered-list ul {
+  list-style: none;
+  padding: 0;
+}
+
+.registered-list li {
+  background: rgba(255,255,255,0.08);
+  padding: 12px;
+  border-radius: 8px;
+  margin-bottom: 10px;
+}
+.success-message {
+  background-color: #d4edda;
+  color: #155724;
+  padding: 10px 15px;
+  border: 1px solid #c3e6cb;
+  border-radius: 4px;
+  margin-bottom: 15px;
+  font-weight: bold;
+}
+.sr-page { background: #0b0f14; min-height: 100vh; color: #e8eef5; }
+.sr-container { max-width: 1100px; margin: 24px auto; padding: 0 16px 40px; }
+
+.sr-header h2 { font-size: 1.6rem; margin: 8px 0; }
+.sr-sub { opacity: .8; margin: 0 0 18px 0; }
+
+.sr-tabs { display: flex; gap: 8px; margin-bottom: 16px; }
+.sr-tab {
+  padding: 10px 14px; border-radius: 10px; background: #111924; color: #cfe3ff;
+  border: 1px solid #1a2635; cursor: pointer;
+}
+.sr-tab.active { background: #162132; border-color: #244163; color: #ffffff; }
+
+.card {
+  background: #0f1621; border: 1px solid #1e2a3a; border-radius: 16px;
+  padding: 18px; box-shadow: 0 10px 18px rgba(0,0,0,.25);
+}
+
+.alert { padding: 10px 12px; border-radius: 10px; margin-bottom: 12px; }
+.alert-error { background: #2a1215; border: 1px solid #6d2a31; color: #ffd6da; }
+.alert-ok { background: #0f2a17; border: 1px solid #1f6d3d; color: #d6ffea; }
+
+.sr-form { display: grid; gap: 14px; }
+.grid-2 { display: grid; gap: 14px; grid-template-columns: 1fr 1fr; }
+@media (max-width: 820px) { .grid-2 { grid-template-columns: 1fr; } }
+
+.field { display: grid; gap: 6px; }
+.field label { font-size: .9rem; opacity: .9; }
+.field input, .field select, .input, .select {
+  background: #0c131c; border: 1px solid #1e2a3a; color: #e8eef5;
+  padding: 10px 12px; border-radius: 10px; outline: none;
+}
+.field input:focus, .field select:focus, .input:focus, .select:focus {
+  border-color: #2b6cb0; box-shadow: 0 0 0 3px rgba(43,108,176,.25);
+}
+.field-span { grid-column: 1 / -1; }
+
+.actions { display: flex; gap: 10px; margin-top: 6px; }
+.btn {
+  background: #111a26; border: 1px solid #243448; color: #d6e6ff;
+  padding: 10px 14px; border-radius: 10px; cursor: pointer;
+}
+.btn:hover { background: #152032; }
+.btn:disabled { opacity: .6; cursor: not-allowed; }
+.btn-primary { background: #1e3a8a; border-color: #375bbe; color: #fff; }
+.btn-primary:hover { background: #2345a3; }
+.btn-danger { background: #6b1f28; border-color: #923746; color: #fff; }
+.btn-danger:hover { background: #7f2731; }
+.btn-ghost { background: transparent; border-color: #243448; }
+
+.toolbar { display: flex; gap: 10px; margin-bottom: 12px; }
+.table-wrap { overflow-x: auto; border: 1px solid #1e2a3a; border-radius: 12px; }
+.table { width: 100%; border-collapse: collapse; min-width: 760px; }
+.table th, .table td { text-align: left; padding: 10px 12px; border-bottom: 1px solid #1b2736; }
+.table thead th { background: #0c131c; position: sticky; top: 0; }
+.row-actions { text-align: right; display: flex; gap: 8px; justify-content: flex-end; }
+.muted { color: #9fb2c9; opacity: .8; padding: 14px; }
+
+.pager { display: flex; justify-content: space-between; align-items: center; margin-top: 12px; }
+
+.role-badge {
+  padding: 4px 8px; border-radius: 999px; font-size: .8rem;
+  border: 1px solid #2a3b52; background: #0e1722; color: #cfe3ff;
+}
+.role-super-admin { background: #24121e; color: #ffd6ea; border-color: #5b2a4b; }
+.role-manager { background: #1e1f24; color: #dcdcdc; border-color: #3d3f49; }
+.role-pumper { background: #16211a; color: #c9ffd8; border-color: #284f33; }
+.role-accountant { background: #1f1a12; color: #ffe4bf; border-color: #4a3b23; }
+.role-head-officer { background: #151c24; color: #cfe3ff; border-color: #2a415a; }
+.role-area-manager { background: #151c24; color: #cfe3ff; border-color: #2a415a; }
+
+

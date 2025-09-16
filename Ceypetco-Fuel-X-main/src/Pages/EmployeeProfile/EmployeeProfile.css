@@ -1,0 +1,79 @@
+/* Container */
+.profile-container {
+  min-height: 100vh;
+  background-color: #f5f7fa;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Content */
+.profile-content {
+  flex: 1;
+  padding: 1rem 2rem;
+}
+
+/* Staff Section Header */
+.staff-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.staff-header h2 {
+  font-size: 1.5rem;
+  color: #1b263b;
+  margin: 0;
+}
+
+/* Register Staff Button */
+.register-btn {
+  padding: 0.5rem 1rem;
+  background-color: #1b263b;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: background-color 0.3s ease;
+}
+
+.register-btn:hover {
+  background-color: #324b6e;
+}
+
+/* Staff Grid */
+.staff-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1rem;
+}
+
+/* Staff Card */
+.staff-card {
+  background-color: #ffffff;
+  border-radius: 12px;
+  padding: 1rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  transition: transform 0.2s ease;
+}
+
+.staff-card:hover {
+  transform: scale(1.02);
+}
+
+.staff-card h3 {
+  font-size: 1.2rem;
+  color: #1b263b;
+  margin-bottom: 0.5rem;
+}
+
+.staff-card p {
+  margin: 0.25rem 0;
+  font-size: 0.9rem;
+  color: #333;
+}
+
+.staff-card strong {
+  color: #6b7280;
+}

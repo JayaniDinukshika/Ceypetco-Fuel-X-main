@@ -1,0 +1,94 @@
+/* Main container styling */
+.diesel-container {
+  background-color: #06132a; /* Dark background */
+  color: white;
+  min-height: 100vh;
+  padding: 20px;
+  text-align: center;
+}
+
+/* Details card styling */
+.details-card {
+  background: #d9caca;
+  padding: 20px;
+  border-radius: 12px;
+  max-width: 800px;
+  margin: 0 auto;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+/* Title styling */
+.title {
+  background-color: #2c3e50;
+  color: white;
+  padding: 15px;
+  font-size: 28px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+
+/* Pump section styling */
+.pump-section {
+  background-color: #222;
+  padding: 20px;
+  margin: 20px auto;
+  border-radius: 8px;
+  text-align: left;
+  max-width: 500px;
+  width: 100%;
+}
+
+.pump-section h2 {
+  background-color: #444;
+  padding: 10px;
+  margin-bottom: 15px;
+  border-radius: 5px;
+}
+
+/* Form label styling */
+label {
+  display: block;
+  margin: 10px 0 5px;
+  font-weight: bold;
+}
+
+/* Input field styling */
+input {
+  width: 100%;
+  padding: 8px;
+  background: #333;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  margin-bottom: 10px;
+}
+
+/* Total sale styling */
+.total {
+  font-size: 32px;
+  color: #cd1508; /* Diesel-greenish blue tone */
+  margin-top: 20px;
+}
+
+/* Button styling */
+.octane95-btn,
+.SuperDiesel-btn {
+  background-color: #f39c12;
+  color: white;
+  padding: 10px 20px;
+  font-size: 18px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.octane95-btn:hover,
+.SuperDiesel-btn:hover {
+  background-color: #e67e22;
+}
+
+/* Button spacing */
+.octane95-btn {
+  margin-bottom: 10px;
+}

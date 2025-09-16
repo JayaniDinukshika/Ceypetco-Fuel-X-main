@@ -1,0 +1,118 @@
+/* Main container styling */
+.petrol95-container {
+    background-color: #06132a; /* Dark background */
+    color: white; /* White text */
+    min-height: 100vh; /* Full height */
+    padding: 20px;
+    text-align: center; /* Center align the content */
+  }
+  
+  /* Details card styling */
+  .details-card {
+    background: #1c1c1c; /* Darker background for card */
+    padding: 20px;
+    border-radius: 12px; /* Rounded corners */
+    max-width: 800px; /* Limit width */
+    margin: 0 auto; /* Center the card */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); /* Shadow effect */
+  }
+  
+  /* Title styling */
+  .title {
+    background-color: #d9534f; /* Red header */
+    color: white;
+    padding: 15px;
+    font-size: 28px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+  }
+  
+  /* Pump section styling */
+  .pump-section {
+    background-color: #222;
+    padding: 20px;
+    margin: 20px 0;
+    border-radius: 8px;
+    text-align: left;
+  }
+  
+  .pump-section h2 {
+    background-color: #444;
+    padding: 10px;
+    margin-bottom: 15px;
+    border-radius: 5px;
+  }
+  
+  /* Form label styling */
+  label {
+    display: block;
+    margin: 10px 0 5px;
+    font-weight: bold;
+  }
+  
+  /* Input field styling */
+  input {
+    width: 100%;
+    padding: 8px;
+    background: #333;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    margin-bottom: 10px;
+  }
+  
+  /* Total sale styling */
+  .total {
+    font-size: 32px; /* Larger font */
+    color: #cd1508; /* Red text */
+    margin-top: 20px;
+  }
+  
+  /* Button styling (common for both buttons) */
+  .octane92-btn,
+  .SuperDiesel-btn {
+    background-color: #f39c12; /* Orange button */
+    color: white;
+    padding: 10px 20px;
+    font-size: 18px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer; /* Pointer cursor */
+    transition: background 0.3s ease; /* Smooth hover effect */
+  }
+  
+  /* Hover effect for buttons */
+  .octane92-btn:hover,
+  .SuperDiesel-btn:hover {
+    background-color: #e67e22; /* Darker orange on hover */
+  }
+  
+  /* Button spacing */
+  .octane92-btn {
+    margin-bottom: 10px; /* Space between buttons */
+  }
+  
+   /* Button styling (common for both buttons) */
+   .octane95-btn,
+   .SuperDiesel-btn {
+     background-color: #f39c12; /* Orange button */
+     color: white;
+     padding: 10px 20px;
+     font-size: 18px;
+     border: none;
+     border-radius: 8px;
+     cursor: pointer; /* Pointer cursor */
+     transition: background 0.3s ease; /* Smooth hover effect */
+   }
+   
+   /* Hover effect for buttons */
+   .octane95-btn:hover,
+   .SuperDiesel-btn:hover {
+     background-color: #e67e22; /* Darker orange on hover */
+   }
+   
+   /* Button spacing */
+   .octane95-btn {
+     margin-bottom: 10px; /* Space between buttons */
+   }
+   
