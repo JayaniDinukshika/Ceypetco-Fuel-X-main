@@ -225,6 +225,17 @@ export default function App() {
               </RequireAuth>
             }
           />
+          {/* <Route
+            path="/AttendanceManager"
+            element={
+              <RequireAuth>
+                <RequireRole allowed={[ROLES.SUPER_ADMIN, ROLES.MANAGER, ROLES.ACCOUNTANT]}>
+                  <AttendanceManager />
+                </RequireRole>
+              </RequireAuth>
+            }
+          /> */}
+          
 
           {/* StaffRegistration — SA & Manager only */}
           <Route
