@@ -16,7 +16,9 @@ const Header = () => {
           <li><Link to="/Payment">Payment</Link></li>
           <li><Link to="/Daily Details">Daily Details</Link></li>
           <li><Link to="/Browser Details">Bowser Details</Link></li>
-          <li><Link to="/Summary">Summary</Link></li>
+          {/* <li><Link to="/Summary">Summary</Link></li> */}
+          
+          <li><Link to="/BowserSummary">Summary</Link></li>
           <li><Link to="/StaffRegistration">Staff Registration</Link></li>
           <li><Link to="/Login">Logout</Link></li>
 

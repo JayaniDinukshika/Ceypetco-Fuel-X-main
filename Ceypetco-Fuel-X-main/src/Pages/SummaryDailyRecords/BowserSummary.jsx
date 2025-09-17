@@ -3,6 +3,8 @@ import Chart from 'chart.js/auto';
 import annotationPlugin from 'chartjs-plugin-annotation';
 import './BowserSummary.css';
 import { Link, useNavigate } from 'react-router-dom';
+import Header from '../../Components/Header';
+import Footer from '../../Components/Footer';
 
 Chart.register(annotationPlugin);
 
@@ -25,6 +27,8 @@ const COLORS = {
 // LocalStorage keys
 const LS_KEY_WARNINGS = 'cf_x_warningLevels';
 const LS_KEY_GLOBAL_WARN = 'cf_x_globalWarn';
+const LS_KEY_WARN_HITS  = 'cf_x_warnHits';     // last date warned per fuel (dedupe)
+const LS_KEY_OPEN_TOASTS = 'cf_x_open_toasts'; // persist open toasts (sticky)
 
 // --- helpers ---
 function formatYMD(d) {
@@ -45,6 +49,7 @@ function lastNYears(n) {
   from.setFullYear(to.getFullYear() - n);
   return { from: formatYMD(from), to: formatYMD(to) };
 }
+
 const monthNames = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
 function aggregatePoints(points, granularity) {
   if (granularity === 'day') return points.slice();
@@ -76,12 +81,39 @@ const normalizeWarnings = (saved) => {
     for (const ft of FUEL_TYPES) {
       if (Object.prototype.hasOwnProperty.call(saved, ft)) {
         const v = saved[ft];
-        merged[ft] = (v === '' || Number.isFinite(Number(v))) ? Number(v) : merged[ft];
+        merged[ft] = (v === '' || Number.isFinite(Number(v))) ? (v === '' ? '' : Number(v)) : merged[ft];
       }
     }
   }
   return merged;
 };
+
+// System notification (HTTPS or localhost)
+function notifyWeb(message) {
+  try {
+    if (!('Notification' in window)) return;
+    if (Notification.permission === 'granted') {
+      new Notification('Fuel Warning', { body: message });
+    } else if (Notification.permission === 'default') {
+      Notification.requestPermission().then((p) => {
+        if (p === 'granted') new Notification('Fuel Warning', { body: message });
+      });
+    }
+  } catch {}
+}
+
+// Persist/restore open toasts
+function loadOpenToasts() {
+  try {
+    const raw = localStorage.getItem(LS_KEY_OPEN_TOASTS);
+    if (!raw) return [];
+    const arr = JSON.parse(raw);
+    return Array.isArray(arr) ? arr : [];
+  } catch { return []; }
+}
+function saveOpenToasts(arr) {
+  try { localStorage.setItem(LS_KEY_OPEN_TOASTS, JSON.stringify(arr)); } catch {}
+}
 
 const BowserSummary = ({ onClose }) => {
   const navigate = useNavigate();
@@ -106,7 +138,36 @@ const BowserSummary = ({ onClose }) => {
   const [series, setSeries] = useState({});
   const [error, setError] = useState(null);
 
-  // Load persisted
+  // in-app toast stack (sticky until closed) + persist
+  const [toasts, setToasts] = useState(() => loadOpenToasts());
+  const pushToast = (msg, key = undefined) => {
+    // avoid duplicates if same message already shown
+    const exists = toasts.some(t => t.msg === msg);
+    if (exists) return;
+
+    const id = `${Date.now()}-${Math.random().toString(36).slice(2)}`;
+    const newToast = { id, msg, key: key || null, ts: Date.now() };
+    const next = [...toasts, newToast];
+    setToasts(next);
+    saveOpenToasts(next);
+    notifyWeb(msg);
+  };
+  const closeToast = (id) => {
+    const next = toasts.filter((x) => x.id !== id);
+    setToasts(next);
+    saveOpenToasts(next);
+  };
+
+  // Request notification permission on first load so page-load alerts can show
+  useEffect(() => {
+    try {
+      if ('Notification' in window && Notification.permission === 'default') {
+        Notification.requestPermission().catch(() => {});
+      }
+    } catch {}
+  }, []);
+
+  // Load persisted warning settings
   useEffect(() => {
     try {
       const raw = localStorage.getItem(LS_KEY_WARNINGS);
@@ -202,7 +263,7 @@ const BowserSummary = ({ onClose }) => {
           plugins: {
             legend: { display: false },
             tooltip: { callbacks: { label: (ctx) => ` ${ctx.parsed.y ?? '—'} L` } },
-            annotation: threshold != null && threshold !== '' ? {
+            annotation: (threshold != null && threshold !== '') ? {
               annotations: {
                 warningLine: {
                   type: 'line',
@@ -314,9 +375,71 @@ const BowserSummary = ({ onClose }) => {
     setPendingTo(r.to);
   };
 
+  // Detect threshold crossings / hits and create persistent toasts (and system notifications)
+  function checkForWarningsNow(seriesMap, warnLevels, gran) {
+    let hits = {};
+    try { hits = JSON.parse(localStorage.getItem(LS_KEY_WARN_HITS) || '{}'); } catch {}
+    let changed = false;
+
+    // Build a quick set of currently open toast messages to avoid duplicates
+    const openMsgs = new Set(toasts.map(t => t.msg));
+
+    FUEL_TYPES.forEach((fuel) => {
+      const thrRaw = warnLevels[fuel];
+      if (thrRaw === '' || thrRaw == null) return;
+      const thr = Number(thrRaw);
+      if (!Number.isFinite(thr)) return;
+
+      const raw = seriesMap[fuel] || [];
+      const agg = aggregatePoints(raw, gran);
+      if (!agg.length) return;
+
+      // Crossing detection: prev > thr && curr <= thr
+      let hit = null;
+      for (let i = 1; i < agg.length; i++) {
+        const prev = Number(agg[i - 1]?.level);
+        const curr = Number(agg[i]?.level);
+        if (Number.isFinite(prev) && Number.isFinite(curr) && prev > thr && curr <= thr) {
+          hit = agg[i];
+        }
+      }
+      // If no explicit crossing, but latest is already <= thr, still warn
+      const last = agg[agg.length - 1];
+      if (!hit && Number.isFinite(Number(last.level)) && Number(last.level) <= thr) {
+        hit = last;
+      }
+
+      if (hit) {
+        const hitKey = hit.date; // e.g., '2025-09-01' / '2025-09' / '2025'
+        const msg = `${fuel}: ${hit.level} L ≤ warning ${thr} L on ${labelFor(hitKey, gran)}`;
+
+        // Show if it's a new date OR if we don't already have this toast open
+        if (hits[fuel] !== hitKey || !openMsgs.has(msg)) {
+          pushToast(msg, `${fuel}@${hitKey}`);
+          hits[fuel] = hitKey;
+          changed = true;
+        }
+      }
+    });
+
+    if (changed) {
+      try { localStorage.setItem(LS_KEY_WARN_HITS, JSON.stringify(hits)); } catch {}
+    }
+  }
+
+  // Run detector after data loads and on any relevant change (triggers on page load)
+  useEffect(() => {
+    if (!loading) {
+      checkForWarningsNow(series, warningLevels, granularity);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [loading, series, warningLevels, granularity]);
+
   return (
     <div className="bowser-summary-container">
-      {/* Header */}
+      <Header />
+
+      {/* Header strip */}
       <div className="summary-header-bar">
         <div className="container header-inner">
           <div className="header-left">
@@ -340,9 +463,18 @@ const BowserSummary = ({ onClose }) => {
         <div className="tool-group">
           <div className="label-muted">View</div>
           <div className="seg">
-            <button className={`seg-btn ${granularity === 'day' ? 'active' : ''}`} onClick={() => setGranularity('day')}>Daily</button>
-            <button className={`seg-btn ${granularity === 'month' ? 'active' : ''}`} onClick={() => setGranularity('month')}>Monthly</button>
-            <button className={`seg-btn ${granularity === 'year' ? 'active' : ''}`} onClick={() => setGranularity('year')}>Yearly</button>
+            <button
+              className={`seg-btn ${granularity === 'day' ? 'active' : ''}`}
+              onClick={() => setGranularity('day')}
+            >Daily</button>
+            <button
+              className={`seg-btn ${granularity === 'month' ? 'active' : ''}`}
+              onClick={() => setGranularity('month')}
+            >Monthly</button>
+            <button
+              className={`seg-btn ${granularity === 'year' ? 'active' : ''}`}
+              onClick={() => setGranularity('year')}
+            >Yearly</button>
           </div>
         </div>
 
@@ -350,12 +482,21 @@ const BowserSummary = ({ onClose }) => {
           <div className="label-muted">Custom Range</div>
           <div className="date-inline">
             <label>From
-              <input type="date" value={pendingFrom} max={pendingTo || todayStr}
-                     onChange={(e) => setPendingFrom(e.target.value)} />
+              <input
+                type="date"
+                value={pendingFrom}
+                max={pendingTo || todayStr}
+                onChange={(e) => setPendingFrom(e.target.value)}
+              />
             </label>
             <label>To
-              <input type="date" value={pendingTo} min={pendingFrom} max={todayStr}
-                     onChange={(e) => setPendingTo(e.target.value)} />
+              <input
+                type="date"
+                value={pendingTo}
+                min={pendingFrom}
+                max={todayStr}
+                onChange={(e) => setPendingTo(e.target.value)}
+              />
             </label>
             <div className="preset-row">
               <button className="btn tiny" onClick={() => preset('30d')}>Last 30d</button>
@@ -369,8 +510,13 @@ const BowserSummary = ({ onClose }) => {
         <div className="tool-group">
           <div className="label-muted">Warning for all</div>
           <div className="inline">
-            <input type="number" min="0" value={globalWarn}
-                   onChange={(e) => setGlobalWarn(e.target.value)} className="input sm" />
+            <input
+              type="number"
+              min="0"
+              value={globalWarn}
+              onChange={(e) => setGlobalWarn(e.target.value)}
+              className="input sm"
+            />
             <button className="btn primary" onClick={applyGlobalWarning}>Apply</button>
           </div>
         </div>
@@ -415,6 +561,26 @@ const BowserSummary = ({ onClose }) => {
           </div>
         ))}
       </div>
+
+      {/* Toasts (sticky until user closes, persisted across refresh) */}
+      <div className="toast-stack" aria-live="assertive" aria-atomic="true">
+        {toasts.map((t) => (
+          <div key={t.id} className="toast warn" role="alert">
+            <button
+              className="toast-close"
+              onClick={() => closeToast(t.id)}
+              aria-label="Dismiss"
+              title="Dismiss"
+            >
+              ×
+            </button>
+            <strong>⚠ Fuel Warning</strong>
+            <span>{t.msg}</span>
+          </div>
+        ))}
+      </div>
+
+      <Footer />
     </div>
   );
 };
