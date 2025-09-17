@@ -1,37 +1,87 @@
-.payment-container { max-width: 1100px; margin: 0 auto; padding: 16px; }
+/* Page container — taller page and more breathing room */
+.payment-container{
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 24px;
+  /* make page a bit taller; footer won’t jump up on short content */
+  min-height: calc(100dvh - 160px);
+  padding-bottom: 72px;
+}
 
-.tabs { display: flex; gap: 8px; margin: 12px 0 16px; }
-.tab { padding: 10px 14px; border-radius: 10px; border: 1px solid #2e2e2e; background: #111; color: #ddd; cursor: pointer; }
-.tab.active { background: #1f1f1f; border-color: #555; }
+/* Tabs centered + active styling */
+.tabs{ display: flex; gap: 8px; margin: 12px 0 16px; justify-content: center; }
+.tab{
+  padding: 10px 14px;
+  border-radius: 10px;
+  border: 1px solid #2e2e2e;
+  background: #111;
+  color: #ddd;
+  cursor: pointer;
+}
+.tab.active{ background: #1f1f1f; border-color: #555; }
 
+/* Sections + rows */
 .section { }
 .row { display: flex; gap: 16px; align-items: end; margin-bottom: 12px; flex-wrap: wrap; }
 
 .label { display: block; font-size: 12px; opacity: .8; margin-bottom: 4px; }
-input[type="date"], input[type="month"], select, input[type="number"] {
+input[type="date"], input[type="month"], select, input[type="number"]{
   background: #151515; color: #e6e6e6; border: 1px solid #2b2b2b; border-radius: 8px; padding: 8px 10px;
 }
 
-.table-wrap { width: 100%; overflow-x: auto; }
-.table { width: 100%; border-collapse: collapse; }
-.table th, .table td { padding: 10px 12px; border-bottom: 1px solid #2a2a2a; }
-.table th { text-align: left; font-weight: 600; color: #ddd; background: #141414; }
+/* Table */
+.table-wrap{ width: 100%; overflow-x: auto; }
+.table{ width: 100%; border-collapse: collapse; }
+.table th, .table td{ padding: 10px 12px; border-bottom: 1px solid #2a2a2a; }
+.table th{ text-align: left; font-weight: 600; color: #ddd; background: #141414; }
 
-.card { background: #121212; border: 1px solid #2e2e2e; border-radius: 12px; padding: 14px; }
-.grid-2 { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 8px; }
+/* Cards */
+.card{ background: #121212; border: 1px solid #2e2e2e; border-radius: 12px; padding: 14px; }
+.grid-2{ display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 8px; }
 
-.btn {
+/* Buttons */
+.btn{
   padding: 8px 12px; border-radius: 8px; border: 1px solid #444;
   background: #1b1b1b; color: #eaeaea; cursor: pointer;
+  transition: background-color .12s ease, border-color .12s ease, transform .06s ease;
 }
-.btn:disabled { opacity: .6; cursor: not-allowed; }
+.btn:hover{ background:#212121; border-color:#555; }
+.btn:active{ transform: translateY(1px); }
+.btn:disabled{ opacity: .6; cursor: not-allowed; }
 
-.banner-error {
+/* Primary action (Save All) pops and stays at right edge */
+.btn.primary{
+  background: #1e3a8a; /* indigo-800 */
+  border-color: #2b3f93;
+  color: #eef2ff;
+  font-weight: 700;
+}
+.btn.primary:hover{ background:#1d4ed8; border-color:#1e40af; }
+
+/* Toolbar — re-arranged into a neat responsive grid */
+.toolbar{
+  display: grid;
+  grid-template-columns: auto auto 1fr auto; /* [Mark P] [Mark A] [spacer + salary] [Save All] */
+  gap: 10px 12px;
+  align-items: center;
+  width: 100%;
+}
+.toolbar .salary-all{ display: inline-flex; align-items: center; gap: 8px; }
+.toolbar .salary-all input{ width: 140px; }
+.toolbar .primary{ justify-self: end; }
+
+/* On small screens, wrap into two columns; keep Save All at the end */
+@media (max-width: 800px){
+  .toolbar{
+    grid-template-columns: 1fr 1fr;
+  }
+  .toolbar .salary-all{ grid-column: 1 / -1; }
+  .toolbar .primary{ grid-column: 2 / -1; justify-self: end; }
+}
+
+/* Banner */
+.banner-error{
   padding: 12px; margin-bottom: 12px;
   background: #2a1215; color: #ffd6da; border: 1px solid #6d2a31; border-radius: 10px;
 }
-.banner-btn { margin-left: 10px; padding: 4px 8px; }
-
-.toolbar { display: flex; gap: 8px; align-items: center; }
-.salary-all { display: flex; gap: 8px; align-items: center; }
-.salary-all input { width: 120px; }
+.banner-btn{ margin-left: 10px; padding: 4px 8px; }

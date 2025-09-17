@@ -3,7 +3,7 @@
   --bg-0:#0B0F14; --bg-1:#0F1620; --bg-2:#131B26;
   --border:#1F2A37;
   --text-1:#E5E7EB; --text-2:#A3B3C2; --text-muted:#7A8A9B;
-  --primary:#60A5FA; --primary-strong:#3B82F6;
+  --primary:#60A5FA; --primary-strong:#3B82F6; --accent:#22D3EE;
   --radius:12px; --radius-lg:20px;
   --space-1:4px; --space-2:8px; --space-3:12px; --space-4:16px;
   --space-5:24px; --space-6:32px; --space-7:48px; --space-8:64px;
@@ -39,54 +39,132 @@
 }
 .stationPlaceholder{ min-height: 0; }
 
-/* ===== Carousel ===== */
+/* ===== Carousel wrapper ===== */
 .carousel-container{
   position: relative;
   width: 100%;
   overflow: hidden;
   border-radius: var(--radius-lg);
-  border: 1px solid #243041;    /* solid colors for compatibility */
+  border: 1px solid #243041;
   background: #121923;
   box-shadow: 0 1px 0 rgba(255,255,255,0.02), 0 16px 40px rgba(0,0,0,0.45);
   padding: var(--space-4);
 }
 
-/* Slick baseline — avoid flex/grid on track or slides */
+/* Slick baseline — keep defaults stable */
 .carousel-container .slick-slider{ width: 100%; }
 .slick-list{ overflow: hidden; }
-.slick-track{ display: block !important; }        /* restore Slick's default */
-.slick-slide{ float: left; min-height: 1px; }     /* ensure visibility */
+.slick-track{ display: block !important; } /* make sure no external styles switch to flex */
+.slick-slide{ float: left; min-height: 1px; }
 .slick-initialized .slick-slide{ display: block; }
 
-/* Slides */
-.slide img{
+/* Add inner padding per slide (so centerMode doesn't touch edges) */
+.slide-pad{ padding: 6px; }
+
+/* Slide card look */
+/* ===== Carousel wrapper ===== */
+.carousel-container{
+  position: relative;
   width: 100%;
-  height: clamp(220px, 40vw, 420px);
-  object-fit: cover;
-  display: block;
-  border-radius: var(--radius);
-  background: linear-gradient(135deg, #253244 0%, #10161E 100%); /* fallback if image missing */
-  filter: saturate(0.95) contrast(1.02);
+  overflow: hidden;
+  border-radius: var(--radius-lg);
+  border: 1px solid #243041;
+  background: #121923;
+  box-shadow: 0 1px 0 rgba(255,255,255,0.02), 0 16px 40px rgba(0,0,0,0.45);
+  padding: var(--space-4);
 }
 
-/* Slick UI (dark) */
+/* Let Slick lay slides side-by-side cleanly */
+.carousel-container .slick-slider{ width: 100%; }
+.slick-list{
+  overflow: hidden;
+  padding: 0 40px;            /* “margin” for the centered slide */
+}
+@media (max-width: 1024px){ .slick-list{ padding: 0 24px; } }
+@media (max-width: 480px){  .slick-list{ padding: 0 12px; } }
+
+/* Use modern flex track to avoid stacking/overlap */
+.slick-track{
+  display: flex !important;
+  align-items: stretch;
+  gap: 12px;                  /* spacing between slides */
+}
+.slick-slide{
+  height: auto;               /* let slides grow with content */
+}
+.slick-slide > div{ height: 100%; }  /* keep your inner wrapper full height */
+
+/* Slide padding & card */
+.slide-pad{ padding: 0; }     /* spacing handled by track gap */
+.slide-card{
+  position: relative;
+  border-radius: 16px;
+  overflow: hidden;
+  height: 360px; 
+              /* consistent height */
+  background: linear-gradient(135deg, #253244 0%, #10161E 100%);
+  box-shadow: 0 10px 30px rgba(0,0,0,.35);
+  transform: translateZ(0);
+  transition: transform .25s ease, box-shadow .25s ease, filter .25s ease;
+}
+@media (max-width: 768px){ .slide-card{ height: 280px; } }
+.slide-card img{
+  position: absolute; inset: 0;
+  width: 100%; height: 100%; object-fit: cover; display: block;
+  filter: saturate(.96) contrast(1.02) brightness(.98);
+}
+.slide-card .scrim{
+  position: absolute; inset: 0;
+  background: radial-gradient(120% 120% at 80% 10%, rgba(34,211,238,.18), transparent 60%),
+              linear-gradient(to bottom, rgba(0,0,0,0) 65%, rgba(0,0,0,.25) 100%);
+  pointer-events: none;
+}
+
+/* Emphasize the centered slide */
+.slick-center .slide-card{
+  transform: scale(1.02);
+  box-shadow: 0 14px 50px rgba(59,130,246,.25);
+  filter: saturate(1.02);
+}
+
+/* Dots & arrows */
+.slick-dots{ bottom: -2px; }
 .slick-dots li button:before{ color: #9FB0C2; opacity: .7; }
 .slick-dots li.slick-active button:before{ color: var(--primary); opacity: 1; }
-.slick-prev:before, .slick-next:before{ color: #E5E7EB; opacity: .85; }
+.slick-prev, .slick-next{ width: 38px; height: 38px; }
+.slick-prev:before, .slick-next:before{ color: #E5E7EB; opacity: .9; font-size: 34px; }
 
-/* ===== Buttons ===== */
+
+/* ===== Buttons row (center, one line) ===== */
+.buttons{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-3);
+  flex-wrap: nowrap;            /* keep all in one line */
+  overflow-x: auto;             /* allow horizontal scroll on small screens */
+  padding: var(--space-2);
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+}
+.buttons::-webkit-scrollbar{ height: 6px; }
+.buttons::-webkit-scrollbar-thumb{ background: #2A394C; border-radius: 6px; }
+.buttons::-webkit-scrollbar-track{ background: transparent; }
+
+/* Hide any <br> in legacy JSX */
+.buttons br{ display: none; }
+
 .buttons .btn{
   display: inline-flex; align-items: center; justify-content: center;
+  white-space: nowrap;                 /* keep labels on one line */
   height: 44px; padding: 0 var(--space-5);
   border-radius: 999px; border: 1px solid #2A394C;
   background: #121923;
   color: var(--text-1); text-decoration: none; font-weight: 600;
   transition: transform .06s ease, background-color .12s ease, border-color .12s ease, box-shadow .12s ease;
-  margin-bottom: var(--space-3);
 }
 .buttons .btn:hover{
   background: #172131;
   border-color: #3B82F6;
   box-shadow: 0 1px 0 rgba(255,255,255,0.04), 0 10px 24px rgba(96,165,250,0.18);
 }
-.buttons br{ display: block; content: ""; }

@@ -107,30 +107,62 @@
   color: var(--primary);
 }
 
-/* ===== Date section ===== */
+/* ===== Date section: single centered row ===== */
 .date-section{
   border: 1px solid #223043;
   background: #111922;
   border-radius: var(--radius-lg);
-  padding: var(--space-5);
-  display: grid;
-  gap: var(--space-5);
-}
-.date-group > span{
-  display: inline-block; margin-bottom: var(--space-2);
-  color: var(--text-2); font-size: .9rem; letter-spacing: .08em;
+  padding: var(--space-4) var(--space-5);
+  display: flex;                 /* one row */
+  align-items: center;
+  justify-content: center;       /* centered */
+  gap: var(--space-6);
+  flex-wrap: nowrap;             /* stay on one line */
+  overflow-x: auto;              /* allow horizontal scroll on very small screens */
+  -webkit-overflow-scrolling: touch;
 }
 
+/* put label and digit boxes on the same line inside each group */
+.date-group{
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+/* inline label (no top margin now) */
+.date-group > span{
+  margin: 0;
+  color: var(--text-2);
+  font-size: .9rem;
+  letter-spacing: .08em;
+  white-space: nowrap;
+}
+
+/* digits laid out horizontally */
 .year-boxes, .Month-boxes, .Day-boxes{
-  display: grid; grid-auto-flow: column; gap: var(--space-2);
+  display: grid;
+  grid-auto-flow: column;
+  gap: var(--space-2);
   width: fit-content;
 }
+
+/* slightly tighter boxes so the whole row fits comfortably */
 .digit-box{
-  width: 44px; height: 52px;
+  width: 40px;
+  height: 48px;
   border-radius: 10px;
   border: 1px solid #243041;
   background: #0F1620;
-  display: inline-flex; align-items: center; justify-content: center;
-  font-weight: 800; letter-spacing: .03em;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  letter-spacing: .03em;
   box-shadow: inset 0 1px 0 rgba(255,255,255,.02);
+}
+
+/* optional: make it even tighter on very small screens */
+@media (max-width: 520px){
+  .date-section{ gap: var(--space-4); }
+  .digit-box{ width: 34px; height: 44px; }
 }

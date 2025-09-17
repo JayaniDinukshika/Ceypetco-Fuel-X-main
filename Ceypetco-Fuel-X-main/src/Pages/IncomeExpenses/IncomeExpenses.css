@@ -117,27 +117,46 @@
   display: grid; gap: var(--space-2);
   align-content: start;
 }
+
+/* ==== New bar system: rail is full width, fill uses ::before, value chip follows edge ==== */
 .ie-bar{
+  --w: 0%;
+  position: relative;
   height: 36px;
-  background: #0F2338; border: 1px solid #254061;
-  border-radius: 10px; display: flex; align-items: center; justify-content: flex-end;
-  overflow: hidden; position: relative;
+  border-radius: 10px;
+  background: #0F2338;
+  border: 1px solid #254061;
+  overflow: visible; /* allow label to nudge out slightly */
 }
+
+/* Filled part driven by the --w var coming from JSX */
 .ie-bar::before{
   content: "";
   position: absolute; inset: 0;
+  width: var(--w);
+  border-radius: inherit;
   background: linear-gradient(90deg, rgba(96,165,250,.35), rgba(34,211,238,.25));
-  width: var(--w, 100%);
-  transform-origin: left center;
+  box-shadow: inset 0 0 0 1px rgba(59,130,246,.25);
+  transition: width .25s ease;
 }
-.ie-bar span{
-  position: relative; z-index: 1;
-  padding: 0 var(--space-3);
-  color: var(--text-1); text-shadow: 0 1px 0 rgba(0,0,0,.35);
+
+/* Value chip that sits at the fill edge, but never too far left/right */
+.ie-bar > span{
+  position: absolute;
+  top: 50%;
+  left: clamp(28px, var(--w), calc(100% - 8px));
+  transform: translate(-8px, -50%);
+  padding: 4px 8px;
+  border-radius: 999px;
+  background: #0F1620;
+  border: 1px solid #2A394C;
+  color: #E5E7EB;
   font-weight: 600;
+  line-height: 1;
+  pointer-events: none;
+  white-space: nowrap;
+  text-shadow: 0 1px 0 rgba(0,0,0,.35);
 }
-/* Inline width setter */
-.ie-bar{ --w: auto; }
 
 /* Totals column */
 .ie-totals{

@@ -98,7 +98,7 @@ const IncomeExpenses = () => {
     profit: 0,
   });
 
-  // Load manual fields cache when date changes (only for today; history values come from server)
+  // Load manual fields cache when date changes (today only)
   useEffect(() => {
     if (!isToday) return;
     const saved = JSON.parse(localStorage.getItem(`ie:${selectedDate}`) || "{}");
@@ -116,9 +116,7 @@ const IncomeExpenses = () => {
     if (saved.otherPayment != null) setOtherPayment(String(saved.otherPayment));
   }, [selectedDate, isToday]);
 
-  // Fetch sequence for the currently selected date:
-  // 1) Try to load a saved history record: GET /api/cashbook/:date
-  // 2) If missing, compute live using your analytics + scans + bowser endpoints
+  // Fetch sequence for the currently selected date
   useEffect(() => {
     (async () => {
       try {
@@ -169,12 +167,10 @@ const IncomeExpenses = () => {
         }
 
         // 2) No history -> compute live (read-only for past date)
-        // Bowser rows
         const bowserRes = await fetch(`${API_BASE}/api/browser-details/`);
         const bowserJson = await bowserRes.json();
         const bowserRows = Array.isArray(bowserJson?.data) ? bowserJson.data : [];
 
-        // Scans
         const scanRes = await fetch(`${API_BASE}/api/scanned-text/`);
         const scanPayload = await scanRes.json();
         const scanRows = Array.isArray(scanPayload) ? scanPayload : (scanPayload?.data || []);
@@ -195,7 +191,9 @@ const IncomeExpenses = () => {
             const map = Object.fromEntries((s?.points ?? []).map((p) => [p.date, p.level]));
             yVal = typeof map[yesterdayOfSelected] === "number" ? map[yesterdayOfSelected] : null;
             tVal = typeof map[selectedDate] === "number" ? map[selectedDate] : null;
-          } catch (_) {}
+          } catch {
+            /* ignore */
+          }
 
           // fallback to scans
           if (yVal === null) yVal = pickLatestScanForDate(scanRows, f.name, yesterdayOfSelected);
@@ -367,7 +365,6 @@ const IncomeExpenses = () => {
       if (json?.data?.incomeByFuel) setIncomeByFuel(json.data.incomeByFuel);
 
       setSaveMsg("Saved to cash ✅");
-      // Optionally refresh "history" if you show it
     } catch (e) {
       console.warn("Save failed:", e);
       setSaveMsg("Save failed. Check server.");
@@ -519,7 +516,7 @@ const IncomeExpenses = () => {
               disabled={loading || !isToday}
               title={isToday ? "Save today’s cashbook" : "Read-only for past dates"}
             >
-              Save 
+              Save
             </button>
             {saveMsg && <div className="ie-save-msg">{saveMsg}</div>}
             {err && <div className="ie-error">{err}</div>}
@@ -547,7 +544,7 @@ const IncomeExpenses = () => {
                   key={b.label}
                   className="ie-bar"
                   data-amount={b.amount}
-                  style={{ width: barWidth(b.amount, maxIncomeBar) }}
+                  style={{ "--w": barWidth(b.amount, maxIncomeBar) }}
                   title={`${b.label}: ${formatRs(b.amount)}`}
                 >
                   <span>{formatRs(b.amount)}</span>
@@ -589,7 +586,7 @@ const IncomeExpenses = () => {
                   key={b.label}
                   className="ie-bar"
                   data-amount={b.amount}
-                  style={{ width: barWidth(b.amount, maxExpenseBar) }}
+                  style={{ "--w": barWidth(b.amount, maxExpenseBar) }}
                   title={`${b.label}: ${formatRs(b.amount)}`}
                 >
                   <span>{formatRs(b.amount)}</span>
@@ -610,8 +607,7 @@ const IncomeExpenses = () => {
           <div className="ie-profit-box">{formatRs(totals.profit)}</div>
         </div>
 
-        
-
+       
         {loading && <div className="ie-loading">Loading data…</div>}
       </div>
       <Footer />

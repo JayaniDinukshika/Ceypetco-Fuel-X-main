@@ -1,58 +1,41 @@
-/* ===== Dark tokens (scoped) ===== */
-.navbar[data-theme="dark"]{
-  --bg-0:#0B0F14; --bg-1:#0F1620; --bg-2:#131B26;
-  --border:#1F2A37;
-  --text-1:#E5E7EB; --text-2:#A3B3C2;
-  --primary:#60A5FA; --primary-strong:#3B82F6;
-}
-
-/* ===== Bar ===== */
+/* --- force left logo / right links --- */
 .navbar{
   position: sticky; top: 0; z-index: 1000;
-  background: color-mix(in oklab, var(--bg-0), transparent 12%);
+  background: rgba(11,15,20,.85);
   backdrop-filter: blur(8px);
-  border-bottom: 1px solid color-mix(in oklab, var(--border), transparent 10%);
-  color: var(--text-1);
+  border-bottom: 1px solid rgba(31,42,55,.6);
+  color: #E5E7EB;
 }
 
-.nav-inner{
-  max-width: 1280px; margin: 0 auto;
-  padding: 12px 16px;
-  display: grid; grid-template-columns: auto 1fr;
-  align-items: center; gap: 12px;
-}
+.nav-inner{ max-width:1280px; margin:0 auto; padding:12px 16px; }
 
-/* ===== Brand ===== */
-.logo{
-  display: inline-flex; align-items: center; gap: 10px;
-}
-.logo img{ width: 36px; height: 36px; object-fit: contain; border-radius: 8px; }
-.brand{ font-weight: 700; letter-spacing: .01em; }
+.logo img{ width:36px; height:36px; object-fit:contain; border-radius:8px; }
+.brand{ font-weight:700; letter-spacing:.01em; }
 
-/* ===== Links ===== */
+/* right side links */
 .nav-links{
-  list-style: none; margin: 0; padding: 0;
-  display: flex; gap: 10px; justify-self: end; align-items: center;
-  flex-wrap: wrap;
+  display:flex !important;
+  align-items:center;
+  gap:10px;
+  margin-left:auto !important;     /* pushes links to the right */
+  list-style:none; padding:0; margin-top:0; margin-bottom:0;
+  flex-wrap:wrap;
 }
 .nav-links a{
-  display: inline-flex; align-items: center; height: 38px;
-  padding: 0 12px; border-radius: 999px;
-  color: var(--text-2); text-decoration: none; font-weight: 500;
-  transition: background-color .12s ease, color .12s ease;
+  display:inline-flex; align-items:center; height:38px;
+  padding:0 12px; border-radius:999px; text-decoration:none;
+  color:#A3B3C2; font-weight:500;
+  transition:background-color .12s ease, color .12s ease;
 }
-.nav-links a:hover{
-  background: color-mix(in oklab, var(--bg-2), transparent 40%);
-  color: var(--text-1);
-}
+.nav-links a:hover{ background:rgba(19,27,38,.5); color:#E5E7EB; }
 
-/* ===== Small screens: stack links nicely ===== */
+/* mobile: keep logo first line, links on the next line aligned right */
 @media (max-width: 900px){
-  .nav-inner{
-    grid-template-columns: 1fr;
-    gap: 8px;
-  }
+  .nav-inner{ display:block !important; }
+  .logo{ display:inline-flex; gap:10px; }
   .nav-links{
-    justify-self: start; gap: 8px;
+     justify-content:flex-end !important;
+     margin-left:0 !important;
+     margin-top:8px;
   }
 }

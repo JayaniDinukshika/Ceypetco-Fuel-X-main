@@ -403,9 +403,12 @@ export default function Payment() {
                 <label className="label">Date</label>
                 <input type="date" value={markDate} onChange={(e) => setMarkDate(e.target.value)} />
               </div>
+
+              {/* Re-arranged toolbar (grid) */}
               <div className="toolbar">
                 <button className="btn" onClick={markAllPresent}>Mark All Present</button>
                 <button className="btn" onClick={markAllAbsent}>Mark All Absent</button>
+
                 <div className="salary-all">
                   <span>Set salary for all:</span>
                   <input
@@ -415,10 +418,12 @@ export default function Payment() {
                     onChange={(e) => setSalaryAll(e.target.value)}
                   />
                 </div>
-                <button className="btn" disabled={savingAll} onClick={saveAll}>
+
+                <button className="btn primary" disabled={savingAll} onClick={saveAll}>
                   {savingAll ? `Saving… (${saveAllProgress.done}/${saveAllProgress.total})` : 'Save All'}
                 </button>
               </div>
+
               <div style={{ opacity: .7, marginLeft: 'auto' }}>
                 {loadingUsers ? 'Loading users…' : `${users.length} user(s), Present: ${presentCount}`}
               </div>

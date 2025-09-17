@@ -12,21 +12,28 @@
   --radius:12px; --radius-lg:20px;
 }
 
-.browser-details {
-  min-height: 100dvh;
-  color: var(--text-1);
-  background:
-    radial-gradient(1000px 700px at 90% -10%, rgba(96,165,250,0.10), transparent 60%),
-    radial-gradient(800px 600px at -10% 30%, rgba(34,211,238,0.08), transparent 55%),
-    var(--bg-0);
-  font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
+/* === Taller page === */
+/* Add extra height beyond the viewport so you can scroll a bit */
+.browser-details{
+  min-height: calc(100dvh + 240px);  /* or try 120dvh / 130dvh */
+  
 }
 
-.browser-details-container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: var(--s6) var(--s4) var(--s8);
+/* Add more breathing room inside the page */
+.browser-details-container{
+  padding-bottom: calc(var(--s8) + 200px);
+  padding-top: calc(var(--s6) + 12px);
+  padding-left: 200px ;
+  padding-right: 200px ;
 }
+
+/* (Optional) on small screens, give even more height */
+@media (max-width: 640px){
+  .browser-details{
+    min-height: calc(100dvh + 320px);
+  }
+}
+
 
 /* Header section */
 .header-section {
