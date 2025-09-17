@@ -237,7 +237,7 @@ export default function App() {
           /> */}
           
 
-          {/* StaffRegistration — SA & Manager only */}
+          {/* StaffRegistration — SA & Manager only */} 
           <Route
             path="/StaffRegistration"
             element={
@@ -248,7 +248,7 @@ export default function App() {
               </RequireAuth>
             }
           />
-        </Routes>
+        </Routes> 
       </Router>
     </AuthProvider>
   );

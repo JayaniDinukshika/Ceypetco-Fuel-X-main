@@ -17,7 +17,6 @@ const FUELS = [
 
 // ------------ helpers ------------
 function yyyymmddInTZ(d, timeZone = TZ) {
-  // en-CA formats as YYYY-MM-DD
   return new Intl.DateTimeFormat("en-CA", { timeZone }).format(d);
 }
 function addDays(date, days) {
@@ -59,8 +58,61 @@ function pickLatestScanForDate(rows, fuelName, dateStr) {
 }
 function barWidth(amount, maxAmount) {
   if (!maxAmount || maxAmount <= 0) return "0%";
-  const pct = Math.max(2, (amount / maxAmount) * 100); // keep tiny bars visible
+  const pct = Math.max(2, (amount / maxAmount) * 100);
   return `${Math.min(100, pct)}%`;
+}
+
+/** --- NEW: compute liters for a date (analytics -> scans -> bowser) --- */
+async function computeLitersForDate({ API_BASE, FUELS, selectedDate, yesterdayOfSelected }) {
+  const [bowserRes, scanRes] = await Promise.all([
+    fetch(`${API_BASE}/api/browser-details/`).then(r => r.json()).catch(() => ({})),
+    fetch(`${API_BASE}/api/scanned-text/`).then(r => r.json()).catch(() => ({})),
+  ]);
+
+  const bowserRows = Array.isArray(bowserRes?.data) ? bowserRes.data : [];
+  const scanRows = Array.isArray(scanRes) ? scanRes : (scanRes?.data || []);
+
+  const litersMap = {};
+
+  for (const f of FUELS) {
+    let yVal = null, tVal = null;
+
+    // try analytics first
+    try {
+      const url = `${API_BASE}/analytics/tank-levels?from=${yesterdayOfSelected}&to=${selectedDate}&fuelTypes=${encodeURIComponent(f.name)}`;
+      const r = await fetch(url);
+      if (r.ok) {
+        const j = await r.json();
+        const series = j?.data?.series ?? [];
+        const s =
+          series.find(s => s.fuelType === f.name) ||
+          series.find(s => normalize(s.fuelType).includes(normalize(f.name).split(" ").slice(-2).join(" ")));
+        const map = Object.fromEntries((s?.points ?? []).map(p => [p.date, p.level]));
+        yVal = typeof map[yesterdayOfSelected] === "number" ? map[yesterdayOfSelected] : null;
+        tVal = typeof map[selectedDate] === "number" ? map[selectedDate] : null;
+      }
+    } catch { /* ignore */ }
+
+    // fallback to OCR scans
+    if (yVal === null) yVal = pickLatestScanForDate(scanRows, f.name, yesterdayOfSelected);
+    if (tVal === null) tVal = pickLatestScanForDate(scanRows, f.name, selectedDate);
+
+    // bowser deliveries (recorded refills on that day)
+    const dayDeliveries = bowserRows.filter(b => b && b.date === selectedDate && matchFuel(b.product, f.name));
+    const recordedRefill = dayDeliveries.reduce((sum, b) => sum + (Number(b.quantity) || 0), 0);
+
+    let liters = 0;
+    if (typeof yVal === "number" && typeof tVal === "number") {
+      const netChange = tVal - yVal;
+      const deltaRefill = Math.max(netChange, 0);
+      const effectiveRefill = Math.max(recordedRefill, deltaRefill);
+      const usage = (yVal + effectiveRefill) - tVal;
+      liters = usage >= 0 ? usage : 0;
+    }
+    litersMap[f.key] = liters;
+  }
+
+  return litersMap;
 }
 // ----------------------------------
 
@@ -74,20 +126,20 @@ const IncomeExpenses = () => {
 
   // --- ui state ---
   const [loading, setLoading] = useState(true);
-  const [sourceMsg, setSourceMsg] = useState(""); // "Loaded from history" or "Live (no saved record)"
+  const [sourceMsg, setSourceMsg] = useState("");
   const [err, setErr] = useState("");
 
   // --- data (view model) ---
   const [litersByFuel, setLitersByFuel] = useState({ p92: 0, p95: 0, ad: 0, sd: 0 });
-  const [priceByFuel, setPriceByFuel] = useState({ p92: "", p95: "", ad: "", sd: "" });
+  const [priceByFuel, setPriceByFuel]   = useState({ p92: "", p95: "", ad: "", sd: "" });
   const [incomeByFuel, setIncomeByFuel] = useState({ p92: 0, p95: 0, ad: 0, sd: 0 });
 
   // manual fields
-  const [cardPayment, setCardPayment] = useState("");
-  const [otherIncome, setOtherIncome] = useState("");
-  const [salary, setSalary] = useState("");
+  const [cardPayment, setCardPayment]       = useState("");
+  const [otherIncome, setOtherIncome]       = useState("");
+  const [salary, setSalary]                 = useState("");
   const [browserPayment, setBrowserPayment] = useState("");
-  const [otherPayment, setOtherPayment] = useState("");
+  const [otherPayment, setOtherPayment]     = useState("");
 
   // totals
   const [totals, setTotals] = useState({
@@ -98,7 +150,7 @@ const IncomeExpenses = () => {
     profit: 0,
   });
 
-  // Load manual fields cache when date changes (today only)
+  // Load local cache for today
   useEffect(() => {
     if (!isToday) return;
     const saved = JSON.parse(localStorage.getItem(`ie:${selectedDate}`) || "{}");
@@ -116,7 +168,7 @@ const IncomeExpenses = () => {
     if (saved.otherPayment != null) setOtherPayment(String(saved.otherPayment));
   }, [selectedDate, isToday]);
 
-  // Fetch sequence for the currently selected date
+  /** --- LOAD FLOW (fixed) --- */
   useEffect(() => {
     (async () => {
       try {
@@ -124,108 +176,94 @@ const IncomeExpenses = () => {
         setErr("");
         setSourceMsg("");
 
-        // 1) Try history first
+        // 1) Try server history
         const historyRes = await fetch(`${CASHBOOK_ENDPOINT}/${selectedDate}`);
         if (historyRes.ok) {
           const hx = await historyRes.json();
           const doc = hx?.data;
           if (doc) {
-            // populate from history (server-calculated)
-            setLitersByFuel({
+            const savedLiters = {
               p92: Number(doc?.litersByFuel?.p92) || 0,
               p95: Number(doc?.litersByFuel?.p95) || 0,
               ad:  Number(doc?.litersByFuel?.ad)  || 0,
               sd:  Number(doc?.litersByFuel?.sd)  || 0,
-            });
-            setPriceByFuel({
+            };
+            const savedPrices = {
               p92: String(Number(doc?.pricePerLiterByFuel?.p92) || 0),
               p95: String(Number(doc?.pricePerLiterByFuel?.p95) || 0),
               ad:  String(Number(doc?.pricePerLiterByFuel?.ad)  || 0),
               sd:  String(Number(doc?.pricePerLiterByFuel?.sd)  || 0),
-            });
-            setIncomeByFuel({
-              p92: Number(doc?.incomeByFuel?.p92) || 0,
-              p95: Number(doc?.incomeByFuel?.p95) || 0,
-              ad:  Number(doc?.incomeByFuel?.ad)  || 0,
-              sd:  Number(doc?.incomeByFuel?.sd)  || 0,
-            });
-            setCardPayment(String(Number(doc?.manual?.cardPayment) || 0));
-            setOtherIncome(String(Number(doc?.manual?.otherIncome) || 0));
-            setSalary(String(Number(doc?.manual?.salary) || 0));
-            setBrowserPayment(String(Number(doc?.manual?.browserPayment) || 0));
-            setOtherPayment(String(Number(doc?.manual?.otherPayment) || 0));
+            };
+            const manual = {
+              cardPayment: String(Number(doc?.manual?.cardPayment) || 0),
+              otherIncome: String(Number(doc?.manual?.otherIncome) || 0),
+              salary: String(Number(doc?.manual?.salary) || 0),
+              browserPayment: String(Number(doc?.manual?.browserPayment) || 0),
+              otherPayment: String(Number(doc?.manual?.otherPayment) || 0),
+            };
+
+            // If liters are all zero/missing, compute them live as a fallback
+            const litersSum = savedLiters.p92 + savedLiters.p95 + savedLiters.ad + savedLiters.sd;
+            const liters =
+              litersSum > 0
+                ? savedLiters
+                : await computeLitersForDate({ API_BASE, FUELS, selectedDate, yesterdayOfSelected });
+
+            setLitersByFuel(liters);
+            setPriceByFuel(savedPrices);
+            setCardPayment(manual.cardPayment);
+            setOtherIncome(manual.otherIncome);
+            setSalary(manual.salary);
+            setBrowserPayment(manual.browserPayment);
+            setOtherPayment(manual.otherPayment);
+
+            // Recompute income/totals from (prices + manual + liters)
+            const priceNum = {
+              p92: Number(savedPrices.p92) || 0,
+              p95: Number(savedPrices.p95) || 0,
+              ad:  Number(savedPrices.ad)  || 0,
+              sd:  Number(savedPrices.sd)  || 0,
+            };
+            const inc = {
+              p92: liters.p92 * priceNum.p92,
+              p95: liters.p95 * priceNum.p95,
+              ad:  liters.ad  * priceNum.ad,
+              sd:  liters.sd  * priceNum.sd,
+            };
+            setIncomeByFuel(inc);
+
+            const card = Number(manual.cardPayment) || 0;
+            const otherInc = Number(manual.otherIncome) || 0;
+            const salaryN = Number(manual.salary) || 0;
+            const bowserPay = Number(manual.browserPayment) || 0;
+            const otherPay = Number(manual.otherPayment) || 0;
+
+            const totalFuelIncome = inc.p92 + inc.p95 + inc.ad + inc.sd;
             setTotals({
-              totalFuelIncome: Number(doc?.totals?.totalFuelIncome) || 0,
-              totalFuelIncomeWithoutPayment: Number(doc?.totals?.totalFuelIncomeWithoutPayment) || 0,
-              incomeMain: Number(doc?.totals?.incomeMain) || 0,
-              expensesMain: Number(doc?.totals?.expensesMain) || 0,
-              profit: Number(doc?.totals?.profit) || 0,
+              totalFuelIncome,
+              totalFuelIncomeWithoutPayment: Math.max(0, totalFuelIncome - card),
+              incomeMain: totalFuelIncome + card + otherInc,
+              expensesMain: salaryN + bowserPay + otherPay,
+              profit: (totalFuelIncome + card + otherInc) - (salaryN + bowserPay + otherPay),
             });
-            setSourceMsg("Loaded from history");
+
+            setSourceMsg(
+              litersSum > 0 ? "Loaded from history" : "History (liters auto-computed from scans)"
+            );
             return; // done
           }
         }
 
-        // 2) No history -> compute live (read-only for past date)
-        const bowserRes = await fetch(`${API_BASE}/api/browser-details/`);
-        const bowserJson = await bowserRes.json();
-        const bowserRows = Array.isArray(bowserJson?.data) ? bowserJson.data : [];
-
-        const scanRes = await fetch(`${API_BASE}/api/scanned-text/`);
-        const scanPayload = await scanRes.json();
-        const scanRows = Array.isArray(scanPayload) ? scanPayload : (scanPayload?.data || []);
-
-        const litersMap = {};
-        for (const f of FUELS) {
-          // analytics for this fuel on selected date
-          let yVal = null, tVal = null;
-          try {
-            const url = `${API_BASE}/analytics/tank-levels?from=${yesterdayOfSelected}&to=${selectedDate}&fuelTypes=${encodeURIComponent(f.name)}`;
-            const res = await fetch(url);
-            if (!res.ok) throw new Error(`API ${res.status}`);
-            const json = await res.json();
-            const series = json?.data?.series ?? [];
-            const s =
-              series.find((s) => s.fuelType === f.name) ||
-              series.find((s) => normalize(s.fuelType).includes(normalize(f.name).split(" ").slice(-2).join(" ")));
-            const map = Object.fromEntries((s?.points ?? []).map((p) => [p.date, p.level]));
-            yVal = typeof map[yesterdayOfSelected] === "number" ? map[yesterdayOfSelected] : null;
-            tVal = typeof map[selectedDate] === "number" ? map[selectedDate] : null;
-          } catch {
-            /* ignore */
-          }
-
-          // fallback to scans
-          if (yVal === null) yVal = pickLatestScanForDate(scanRows, f.name, yesterdayOfSelected);
-          if (tVal === null) tVal = pickLatestScanForDate(scanRows, f.name, selectedDate);
-
-          // bowser for selected date
-          const dayDeliveries = bowserRows.filter(
-            (b) => b && b.date === selectedDate && matchFuel(b.product, f.name)
-          );
-          const recordedRefill = dayDeliveries.reduce((sum, b) => sum + (Number(b.quantity) || 0), 0);
-
-          let liters = 0;
-          if (typeof yVal === "number" && typeof tVal === "number") {
-            const netChange = tVal - yVal;
-            const deltaRefill = Math.max(netChange, 0);
-            const effectiveRefill = Math.max(recordedRefill, deltaRefill);
-            const usage = (yVal + effectiveRefill) - tVal;
-            liters = usage >= 0 ? usage : 0;
-          }
-          litersMap[f.key] = liters;
-        }
-
+        // 2) No history → compute a live preview
+        const litersMap = await computeLitersForDate({ API_BASE, FUELS, selectedDate, yesterdayOfSelected });
         setLitersByFuel(litersMap);
 
-        // Reset prices & manual fields when looking at a past day w/o history
         if (!isToday) {
           setPriceByFuel({ p92: "", p95: "", ad: "", sd: "" });
           setCardPayment(""); setOtherIncome("");
           setSalary(""); setBrowserPayment(""); setOtherPayment("");
         }
 
-        // Totals (preview only; 0 until user enters prices today)
         const price = {
           p92: Number(isToday ? (Number(priceByFuel.p92) || 0) : 0),
           p95: Number(isToday ? (Number(priceByFuel.p95) || 0) : 0),
@@ -243,7 +281,7 @@ const IncomeExpenses = () => {
         const card = Number(isToday ? (Number(cardPayment) || 0) : 0);
         const otherInc = Number(isToday ? (Number(otherIncome) || 0) : 0);
         const salaryN = Number(isToday ? (Number(salary) || 0) : 0);
-        const browPay = Number(isToday ? (Number(browserPayment) || 0) : 0);
+        const bowserPay = Number(isToday ? (Number(browserPayment) || 0) : 0);
         const otherPay = Number(isToday ? (Number(otherPayment) || 0) : 0);
 
         const totalFuelIncome = income.p92 + income.p95 + income.ad + income.sd;
@@ -251,8 +289,8 @@ const IncomeExpenses = () => {
           totalFuelIncome,
           totalFuelIncomeWithoutPayment: Math.max(0, totalFuelIncome - card),
           incomeMain: totalFuelIncome + card + otherInc,
-          expensesMain: salaryN + browPay + otherPay,
-          profit: (totalFuelIncome + card + otherInc) - (salaryN + browPay + otherPay),
+          expensesMain: salaryN + bowserPay + otherPay,
+          profit: (totalFuelIncome + card + otherInc) - (salaryN + bowserPay + otherPay),
         });
 
         setSourceMsg("Live (no saved record)");
@@ -308,7 +346,6 @@ const IncomeExpenses = () => {
   // Save (upsert by selectedDate) — enabled only for today.
   const [saveMsg, setSaveMsg] = useState("");
   async function handleSave() {
-    // cache today’s manual inputs locally
     if (isToday) {
       localStorage.setItem(
         `ie:${selectedDate}`,
@@ -360,7 +397,6 @@ const IncomeExpenses = () => {
       if (!res.ok) throw new Error(`POST ${res.status}`);
       const json = await res.json();
 
-      // trust server-calculated totals
       if (json?.data?.totals) setTotals(json.data.totals);
       if (json?.data?.incomeByFuel) setIncomeByFuel(json.data.incomeByFuel);
 
@@ -373,7 +409,6 @@ const IncomeExpenses = () => {
     }
   }
 
-  // bars
   const incomeBars = [
     ...FUELS.map((f) => ({ label: f.name, amount: incomeByFuel[f.key] || 0 })),
     { label: "Card Payment", amount: Number(cardPayment) || 0 },
@@ -607,7 +642,6 @@ const IncomeExpenses = () => {
           <div className="ie-profit-box">{formatRs(totals.profit)}</div>
         </div>
 
-       
         {loading && <div className="ie-loading">Loading data…</div>}
       </div>
       <Footer />
