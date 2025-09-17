@@ -110,7 +110,7 @@ const Login = () => {
                   name="emailOrNic"
                   value={formData.emailOrNic}
                   onChange={handleChange}
-                  placeholder="you@example.com / 9XXXXXXXXV"
+                  placeholder="Enter your Email or NIC"
                   required
                   autoComplete="username"
                   autoFocus
@@ -127,7 +127,7 @@ const Login = () => {
                     name="password"
                     value={formData.password}
                     onChange={handleChange}
-                    placeholder="••••••••"
+                    placeholder="Enter your Password"
                     required
                     autoComplete="current-password"
                     className="input input--pw"

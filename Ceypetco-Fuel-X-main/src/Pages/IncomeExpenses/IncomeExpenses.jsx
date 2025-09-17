@@ -17,7 +17,8 @@ const FUELS = [
 
 // ------------ helpers ------------
 function yyyymmddInTZ(d, timeZone = TZ) {
-  return new Intl.DateTimeFormat("en-CA", { timeZone }).format(d); // YYYY-MM-DD
+  // en-CA formats as YYYY-MM-DD
+  return new Intl.DateTimeFormat("en-CA", { timeZone }).format(d);
 }
 function addDays(date, days) {
   const d = new Date(date);
@@ -43,7 +44,10 @@ function matchFuel(name, wanted) {
 }
 function formatRs(n) {
   if (n == null || Number.isNaN(n)) return "Rs.—";
-  return `Rs.${Number(n).toLocaleString("en-LK", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+  return `Rs.${Number(n).toLocaleString("en-LK", {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  })}`;
 }
 function pickLatestScanForDate(rows, fuelName, dateStr) {
   const candidates = rows
@@ -223,7 +227,7 @@ const IncomeExpenses = () => {
           setSalary(""); setBrowserPayment(""); setOtherPayment("");
         }
 
-        // Totals (preview only; will be 0 until user enters prices — and read-only if past day)
+        // Totals (preview only; 0 until user enters prices today)
         const price = {
           p92: Number(isToday ? (Number(priceByFuel.p92) || 0) : 0),
           p95: Number(isToday ? (Number(priceByFuel.p95) || 0) : 0),
@@ -261,7 +265,8 @@ const IncomeExpenses = () => {
         setLoading(false);
       }
     })();
-  }, [selectedDate]); // eslint-disable-line
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedDate]);
 
   // Recalc totals whenever editable fields change (today only)
   useEffect(() => {
@@ -302,7 +307,7 @@ const IncomeExpenses = () => {
     });
   }, [isToday, priceByFuel, litersByFuel, cardPayment, otherIncome, salary, browserPayment, otherPayment]);
 
-  // Save (upsert by selectedDate) — enabled only for today. Remove `disabled={!isToday}` to allow backfilling.
+  // Save (upsert by selectedDate) — enabled only for today.
   const [saveMsg, setSaveMsg] = useState("");
   async function handleSave() {
     // cache today’s manual inputs locally
@@ -362,8 +367,7 @@ const IncomeExpenses = () => {
       if (json?.data?.incomeByFuel) setIncomeByFuel(json.data.incomeByFuel);
 
       setSaveMsg("Saved to cash ✅");
-      // Optionally refresh "history" list/table if you show it on this page
-      // await fetchHistory();
+      // Optionally refresh "history" if you show it
     } catch (e) {
       console.warn("Save failed:", e);
       setSaveMsg("Save failed. Check server.");
@@ -389,7 +393,7 @@ const IncomeExpenses = () => {
   return (
     <div>
       <Header />
-      <div className="income-expenses-container">
+      <div className="income-expenses-container" data-theme="dark">
 
         {/* Date picker + Today button */}
         <div className="ie-datepicker">
@@ -405,7 +409,8 @@ const IncomeExpenses = () => {
             type="button"
             onClick={() => setSelectedDate(todayStr)}
             disabled={isToday}
-            style={{ marginLeft: 8 }}
+            className="ie-today-btn"
+            title="Jump to today"
           >
             Today
           </button>
@@ -415,7 +420,7 @@ const IncomeExpenses = () => {
         </div>
 
         {/* Controls */}
-        <div className="ie-controls">
+        <div className="ie-controls card">
           <div className="ie-control-grid">
             <div className="ie-control">
               <label>92 Octane Price (Rs/ℓ)</label>
@@ -507,20 +512,22 @@ const IncomeExpenses = () => {
             </div>
           </div>
 
-          <button
-            className="ie-save-btn"
-            onClick={handleSave}
-            disabled={loading || !isToday}  // <-- only today is editable/savable
-            title={isToday ? "Save today’s cashbook" : "Read-only for past dates"}
-          >
-            Save to Cash
-          </button>
-          {saveMsg && <div className="ie-save-msg">{saveMsg}</div>}
-          {err && <div className="ie-error" style={{marginTop: 8}}>{err}</div>}
+          <div className="ie-actions">
+            <button
+              className="ie-save-btn"
+              onClick={handleSave}
+              disabled={loading || !isToday}
+              title={isToday ? "Save today’s cashbook" : "Read-only for past dates"}
+            >
+              Save 
+            </button>
+            {saveMsg && <div className="ie-save-msg">{saveMsg}</div>}
+            {err && <div className="ie-error">{err}</div>}
+          </div>
         </div>
 
         {/* INCOME */}
-        <div className="ie-section ie-income">
+        <div className="ie-section card">
           <h2>INCOME</h2>
 
           <div className="ie-table-row">
@@ -567,7 +574,7 @@ const IncomeExpenses = () => {
         </div>
 
         {/* EXPENSES */}
-        <div className="ie-section ie-expenses">
+        <div className="ie-section card">
           <h2>EXPENSES</h2>
           <div className="ie-table-row">
             <div className="ie-labels">
@@ -598,18 +605,12 @@ const IncomeExpenses = () => {
         </div>
 
         {/* PROFIT */}
-        <div className="ie-profit-section">
+        <div className="ie-profit-section card">
           <h2>Profit of the day</h2>
           <div className="ie-profit-box">{formatRs(totals.profit)}</div>
         </div>
 
-        {/* Links */}
-        <div className="ie-links">
-          <Link to="/Petrol92">Go to Octane 92</Link> ·{" "}
-          <Link to="/petrol95">Octane 95</Link> ·{" "}
-          <Link to="/Diesel">Auto Diesel</Link> ·{" "}
-          <Link to="/SuperDiesel">Super Diesel</Link>
-        </div>
+        
 
         {loading && <div className="ie-loading">Loading data…</div>}
       </div>

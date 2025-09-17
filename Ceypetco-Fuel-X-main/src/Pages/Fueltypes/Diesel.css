@@ -1,94 +1,83 @@
-/* Main container styling */
-.diesel-container {
-  background-color: #06132a; /* Dark background */
-  color: white;
-  min-height: 100vh;
-  padding: 20px;
-  text-align: center;
+.diesel{
+  --bg-0:#0B0F14; --bg-1:#0F1620; --bg-2:#131B26;
+  --border:#1F2A37;
+  --text-1:#E5E7EB; --text-2:#A3B3C2; --text-muted:#7A8A9B;
+  --primary:#60A5FA; --primary-strong:#3B82F6;
+  --success:#16a34a; --danger:#dc2626;
+
+  --radius:12px; --radius-lg:20px;
+  --space-1:4px; --space-2:8px; --space-3:12px; --space-4:16px;
+  --space-5:24px; --space-6:32px; --space-7:48px; --space-8:64px;
+
+  background:
+    radial-gradient(1000px 700px at 90% -10%, rgba(96,165,250,0.10), transparent 60%),
+    radial-gradient(800px 600px at -10% 30%, rgba(34,211,238,0.08), transparent 55%),
+    var(--bg-0);
+  color: var(--text-1);
+  min-height: 100dvh;
+  font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
 }
 
-/* Details card styling */
-.details-card {
-  background: #d9caca;
-  padding: 20px;
-  border-radius: 12px;
-  max-width: 800px;
+.diesel-container{
+  max-width: 1200px;
   margin: 0 auto;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  padding: var(--space-7) var(--space-4) var(--space-8);
 }
 
-/* Title styling */
-.title {
-  background-color: #2c3e50;
-  color: white;
-  padding: 15px;
-  font-size: 28px;
-  border-radius: 8px;
-  margin-bottom: 20px;
+.details-card{
+  border: 1px solid #223043;
+  background: #111922;
+  border-radius: var(--radius-lg);
+  padding: clamp(16px, 3vw, 28px);
+  box-shadow: 0 1px 0 rgba(255,255,255,0.02), 0 16px 40px rgba(0,0,0,0.45);
 }
 
-/* Pump section styling */
-.pump-section {
-  background-color: #222;
-  padding: 20px;
-  margin: 20px auto;
-  border-radius: 8px;
-  text-align: left;
-  max-width: 500px;
-  width: 100%;
+.title{
+  margin: 0 0 var(--space-2);
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  font-size: clamp(1.2rem, 3vw, 1.8rem);
 }
 
-.pump-section h2 {
-  background-color: #444;
-  padding: 10px;
-  margin-bottom: 15px;
-  border-radius: 5px;
+/* Snapshot */
+.snapshot{
+  margin-top: var(--space-5);
+  display: grid; gap: var(--space-3);
+}
+.snapshot label{ color: var(--text-2); font-size: .95rem; }
+.snapshot input{
+  height: 44px; border-radius: var(--radius);
+  border: 1px solid #243041; background: #0F1620; color: var(--text-1);
+  padding: 0 var(--space-4);
 }
 
-/* Form label styling */
-label {
-  display: block;
-  margin: 10px 0 5px;
-  font-weight: bold;
+/* Bowser info */
+.browser-info{
+  margin-top: var(--space-6);
+  border-top: 1px dashed #2a3a4f;
+  padding-top: var(--space-4);
+}
+.browser-list{ display: grid; gap: var(--space-2); }
+.browser-row{
+  border: 1px solid #243041; background: #0F1620;
+  border-radius: 12px; padding: var(--space-3) var(--space-4);
+  display: grid; gap: 6px;
 }
 
-/* Input field styling */
-input {
-  width: 100%;
-  padding: 8px;
-  background: #333;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  margin-bottom: 10px;
+/* Expenditure */
+.expenditure{
+  margin-top: var(--space-6);
+  border-top: 1px dashed #2a3a4f;
+  padding-top: var(--space-4);
 }
 
-/* Total sale styling */
-.total {
-  font-size: 32px;
-  color: #cd1508; /* Diesel-greenish blue tone */
-  margin-top: 20px;
+/* Nav buttons */
+.octane92-btn, .petrol95-btn, .SuperDiesel-btn{
+  height: 40px; padding: 0 var(--space-4);
+  border-radius: 999px; border: 1px solid #2A394C;
+  background: #121923; color: var(--text-1); font-weight: 700; cursor: pointer;
+  transition: background-color .12s ease, border-color .12s ease, transform .06s ease;
 }
-
-/* Button styling */
-.octane95-btn,
-.SuperDiesel-btn {
-  background-color: #f39c12;
-  color: white;
-  padding: 10px 20px;
-  font-size: 18px;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: background 0.3s ease;
-}
-
-.octane95-btn:hover,
-.SuperDiesel-btn:hover {
-  background-color: #e67e22;
-}
-
-/* Button spacing */
-.octane95-btn {
-  margin-bottom: 10px;
+.octane92-btn:hover, .petrol95-btn:hover, .SuperDiesel-btn:hover{
+  background: #172131; border-color: var(--primary-strong); transform: translateY(-1px);
 }

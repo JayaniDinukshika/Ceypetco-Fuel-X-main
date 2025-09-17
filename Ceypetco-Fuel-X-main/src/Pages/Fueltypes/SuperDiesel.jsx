@@ -39,10 +39,10 @@ function productMatches(name, wanted = PRODUCT_NAME) {
 // -----------------------------
 
 const SuperDiesel = () => {
-  const [todayReading, setTodayReading] = useState(""); // optional pump meter (kept for your UI)
-  const [yesterdayLast, setYesterdayLast] = useState(null); // tank level (yesterday)
-  const [todayLast, setTodayLast] = useState(null);         // tank level (today)
-  const [deliveries, setDeliveries] = useState([]);         // today bowser rows for this product
+  const [todayReading, setTodayReading] = useState(""); // optional pump meter
+  const [yesterdayLast, setYesterdayLast] = useState(null);
+  const [todayLast, setTodayLast] = useState(null);
+  const [deliveries, setDeliveries] = useState([]);     // today's bowser rows (this product)
   const [loading, setLoading] = useState(true);
   const [err, setErr] = useState("");
 
@@ -111,9 +111,7 @@ const SuperDiesel = () => {
         const res = await fetch(`${API_BASE}/api/browser-details/`);
         const json = await res.json();
         const rows = Array.isArray(json?.data) ? json.data : [];
-        const todays = rows.filter(
-          (b) => b.date === todayStr && productMatches(b.product)
-        );
+        const todays = rows.filter((b) => b.date === todayStr && productMatches(b.product));
         setDeliveries(todays);
       } catch {
         setDeliveries([]);
@@ -133,7 +131,7 @@ const SuperDiesel = () => {
 
   const deltaRefill = netChange != null ? Math.max(netChange, 0) : 0;
 
-  // Prefer recorded, but never below the positive tank delta (inference when rows missing)
+  // Prefer recorded, but never below the positive tank delta
   const effectiveRefill =
     netChange == null ? recordedRefill : Math.max(recordedRefill, deltaRefill);
 
@@ -143,7 +141,7 @@ const SuperDiesel = () => {
     usageLiters = raw >= 0 ? raw : 0;
   }
 
-  // Optional pump-sale calculation (kept from your UI)
+  // Optional pump-sale calculation (kept)
   const lastReading = typeof yesterdayLast === "number" ? yesterdayLast : 0;
   const todayVal = todayReading.trim() === "" ? 0 : Number(todayReading);
   const sale = !Number.isNaN(todayVal) ? Math.max(0, todayVal - lastReading) : 0;
@@ -166,15 +164,11 @@ const SuperDiesel = () => {
         <div className="details-card">
           <h1 className="title">Lanka Super Diesel</h1>
 
-          <p style={{ marginTop: 0 }}>
+          <p className="muted">
             Day: {todayStr}
             {loading ? " — loading…" : ""}
           </p>
-          {err && (
-            <p style={{ color: "crimson", fontWeight: 500, marginTop: 4 }}>
-              {err}
-            </p>
-          )}
+          {err && <p className="error">{err}</p>}
 
           {/* Tank snapshot */}
           <div className="snapshot">
@@ -192,18 +186,9 @@ const SuperDiesel = () => {
               readOnly
             />
 
-            <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+            <div className="row">
               <label style={{ marginBottom: 0 }}>Change (since yesterday)</label>
-              <span
-                style={{
-                  marginLeft: "auto",
-                  padding: "2px 8px",
-                  borderRadius: 12,
-                  fontSize: 12,
-                  color: "white",
-                  background: changeBadge.bg,
-                }}
-              >
+              <span className="badge" style={{ background: changeBadge.bg }}>
                 {changeBadge.text}
               </span>
             </div>
@@ -225,22 +210,18 @@ const SuperDiesel = () => {
           {/* Today Refilled */}
           <div className="browser-info">
             <h3>Today Refilled</h3>
-            <p>
+            <p className="big">
               <strong>{formatLiters(effectiveRefill)}</strong>
-              {inferenceUsed && (
-                <span style={{ marginLeft: 8, fontSize: 12, color: "#6b7280" }}>
-                  (inferred from tank increase)
-                </span>
-              )}
+              {inferenceUsed && <span className="hint">(inferred from tank increase)</span>}
             </p>
-            <small style={{ color: "#6b7280" }}>
+            <small className="dim">
               Recorded: {formatLiters(recordedRefill)} · Tank Δ (positive): {formatLiters(deltaRefill)}
             </small>
 
             {deliveries.length > 0 ? (
-              <div className="browser-list" style={{ marginTop: 8 }}>
+              <div className="browser-list">
                 {deliveries.map((b) => (
-                  <div key={b._id} className="browser-row">
+                  <div key={b._id || `${b.invoiceNo}-${b.browserNo}-${b.quantity}`} className="browser-row">
                     <div><strong>Invoice:</strong> {b.invoiceNo || "—"}</div>
                     <div><strong>Browser No:</strong> {b.browserNo || "—"}</div>
                     <div><strong>Quantity:</strong> {formatLiters(b.quantity || 0)}</div>
@@ -250,7 +231,7 @@ const SuperDiesel = () => {
                 ))}
               </div>
             ) : (
-              <small style={{ color: "#6b7280" }}>
+              <small className="dim">
                 No recorded bowser deliveries for {todayStr} ({PRODUCT_NAME}).
               </small>
             )}
@@ -259,33 +240,29 @@ const SuperDiesel = () => {
           {/* Today Fuel Expenditure */}
           <div className="expenditure">
             <h3>Today Fuel Expenditure</h3>
-            <p><strong>{formatLiters(usageLiters)}</strong></p>
-            <small style={{ color: "#6b7280" }}>
-              usage = (Yesterday + Today Refilled) − Today.
-            </small>
+            <p className="big"><strong>{formatLiters(usageLiters)}</strong></p>
+            <small className="dim">usage = (Yesterday + Today Refilled) − Today.</small>
           </div>
 
-         
+          {/* Optional Pump Meter */}
+          <div className="pump-meter">
+            <label>Today Reading (optional)</label>
+            <input
+              type="number"
+              inputMode="decimal"
+              value={todayReading}
+              onChange={(e) => setTodayReading(e.target.value)}
+              placeholder="Enter today's meter reading"
+            />
+            <small className="dim">Sale (from meter): {formatLiters(sale)}</small>
+          </div>
 
           {/* Navigation */}
-          <Link to="/Petrol92">
-            <button className="octane92-btn">Octane 92 Petrol</button>
-            <br />
-            <br />
-          </Link>
-
-          <Link to="/Petrol95">
-            <button className="petrol95-btn">Petrol 95</button>
-          </Link>
-          <br />
-          <br />
-          <br />
-
-          <Link to="/Diesel">
-            <button className="diesel-btn">Lanka Auto Diesel</button>
-            <br />
-            <br />
-          </Link>
+          <div className="nav-buttons">
+            <Link to="/Petrol92"><button className="ghost-btn">Octane 92 Petrol</button></Link>
+            <Link to="/Petrol95"><button className="ghost-btn">Petrol 95</button></Link>
+            <Link to="/Diesel"><button className="ghost-btn">Lanka Auto Diesel</button></Link>
+          </div>
         </div>
       </div>
       <Footer />

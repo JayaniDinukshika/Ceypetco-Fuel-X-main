@@ -164,14 +164,12 @@ const Petrol92 = () => {
         <div className="details-card">
           <h1 className="title">Lanka Petrol 92 Octane</h1>
 
-          <p style={{ marginTop: 0 }}>
+          <p className="muted">
             Day:&nbsp;{todayStr}
             {loading ? " — loading…" : ""}
           </p>
           {err && (
-            <p style={{ color: "crimson", fontWeight: 500, marginTop: 4 }}>
-              {err}
-            </p>
+            <p className="error">{err}</p>
           )}
 
           {/* Tank snapshot */}
@@ -179,9 +177,7 @@ const Petrol92 = () => {
             <label>Yesterday Last (from API / scan)</label>
             <input
               type="text"
-              value={
-                typeof yesterdayLast === "number" ? `${yesterdayLast} ℓ` : "—"
-              }
+              value={typeof yesterdayLast === "number" ? `${yesterdayLast} ℓ` : "—"}
               readOnly
             />
 
@@ -192,18 +188,9 @@ const Petrol92 = () => {
               readOnly
             />
 
-            <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+            <div className="row">
               <label style={{ marginBottom: 0 }}>Change (since yesterday)</label>
-              <span
-                style={{
-                  marginLeft: "auto",
-                  padding: "2px 8px",
-                  borderRadius: 12,
-                  fontSize: 12,
-                  color: "white",
-                  background: changeBadge.bg,
-                }}
-              >
+              <span className="badge" style={{ background: changeBadge.bg }}>
                 {changeBadge.text}
               </span>
             </div>
@@ -225,22 +212,22 @@ const Petrol92 = () => {
           {/* Today Refilled */}
           <div className="browser-info">
             <h3>Today Refilled</h3>
-            <p>
+            <p className="big">
               <strong>{formatLiters(effectiveRefill)}</strong>
               {inferenceUsed && (
-                <span style={{ marginLeft: 8, fontSize: 12, color: "#6b7280" }}>
+                <span className="hint">
                   (inferred from tank increase)
                 </span>
               )}
             </p>
-            <small style={{ color: "#6b7280" }}>
+            <small className="dim">
               Recorded: {formatLiters(recordedRefill)} · Tank Δ (positive): {formatLiters(deltaRefill)}
             </small>
 
             {deliveries.length > 0 ? (
-              <div className="browser-list" style={{ marginTop: 8 }}>
+              <div className="browser-list">
                 {deliveries.map((b) => (
-                  <div key={b._id} className="browser-row">
+                  <div key={b._id || `${b.invoiceNo}-${b.browserNo}-${b.quantity}`} className="browser-row">
                     <div><strong>Invoice:</strong> {b.invoiceNo || "—"}</div>
                     <div><strong>Browser No:</strong> {b.browserNo || "—"}</div>
                     <div><strong>Quantity:</strong> {formatLiters(b.quantity || 0)}</div>
@@ -250,7 +237,7 @@ const Petrol92 = () => {
                 ))}
               </div>
             ) : (
-              <small style={{ color: "#6b7280" }}>
+              <small className="dim">
                 No recorded bowser deliveries for {todayStr} ({PRODUCT_NAME}).
               </small>
             )}
@@ -259,26 +246,24 @@ const Petrol92 = () => {
           {/* Today Fuel Expenditure */}
           <div className="expenditure">
             <h3>Today Fuel Expenditure</h3>
-            <p>
+            <p className="big">
               <strong>{formatLiters(usageLiters)}</strong>
             </p>
-            <small style={{ color: "#6b7280" }}>
+            <small className="dim">
               usage = (Yesterday + Today Refilled) − Today.
             </small>
           </div>
 
           {/* Navigate */}
-          <div style={{ marginTop: 16 }}>
+          <div className="nav-buttons">
             <Link to="/Petrol95">
-              <button className="octane95-btn">Octane 95 Petrol</button>
+              <button className="ghost-btn">Octane 95 Petrol</button>
             </Link>
-            <span style={{ display: "inline-block", width: 12 }} />
             <Link to="/Diesel">
-              <button className="diesel-btn">Lanka Auto Diesel</button>
+              <button className="ghost-btn">Lanka Auto Diesel</button>
             </Link>
-            <span style={{ display: "inline-block", width: 12 }} />
             <Link to="/SuperDiesel">
-              <button className="SuperDiesel-btn">Super Diesel</button>
+              <button className="ghost-btn">Super Diesel</button>
             </Link>
           </div>
         </div>

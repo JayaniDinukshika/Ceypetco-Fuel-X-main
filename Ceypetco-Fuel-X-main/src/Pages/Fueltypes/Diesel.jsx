@@ -93,7 +93,7 @@ const Diesel = () => {
 
   const deltaRefill = netChange != null ? Math.max(netChange, 0) : 0;
 
-  // Prefer recorded, but never below the positive tank delta (handles your screenshot case)
+  // Prefer recorded, but never below the positive tank delta
   const effectiveRefill =
     netChange == null ? recordedRefill : Math.max(recordedRefill, deltaRefill);
 
@@ -116,7 +116,7 @@ const Diesel = () => {
 
   return (
     <div className="diesel">
-      <Header />
+      <Header/>
       <div className="diesel-container">
         <div className="details-card">
           <h1 className="title">{PRODUCT_NAME}</h1>
@@ -139,7 +139,15 @@ const Diesel = () => {
                 {changeBadge.text}
               </span>
             </div>
-            <input type="text" value={netChange === null ? "—" : `${netChange} ℓ (${changeBadge.text})`} readOnly />
+            <input
+              type="text"
+              value={
+                netChange === null
+                  ? "—"
+                  : `${netChange} ℓ (${changeBadge.text})`
+              }
+              readOnly
+            />
           </div>
 
           {/* Today Refilled */}
@@ -156,7 +164,7 @@ const Diesel = () => {
             {deliveries.length > 0 ? (
               <div className="browser-list" style={{ marginTop: 8 }}>
                 {deliveries.map((b) => (
-                  <div key={b._id} className="browser-row">
+                  <div key={b._id || `${b.invoiceNo}-${b.browserNo}-${b.quantity}`} className="browser-row">
                     <div><strong>Invoice:</strong> {b.invoiceNo || "—"}</div>
                     <div><strong>Browser No:</strong> {b.browserNo || "—"}</div>
                     <div><strong>Quantity:</strong> {formatLiters(b.quantity || 0)}</div>

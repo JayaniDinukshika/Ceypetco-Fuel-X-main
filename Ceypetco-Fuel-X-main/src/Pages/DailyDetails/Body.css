@@ -1,275 +1,136 @@
-.Container {
-    background-color: rgb(3, 3, 49);
-    color: #e8dede;
-    margin-top: -19px;
+/* ===== Nebula Night tokens (scoped) ===== */
+.body[data-theme="dark"], .body{
+  --bg-0:#0B0F14; --bg-1:#0F1620; --bg-2:#131B26;
+  --border:#1F2A37;
+  --text-1:#E5E7EB; --text-2:#A3B3C2; --text-muted:#7A8A9B;
+  --primary:#60A5FA; --primary-strong:#3B82F6;
+
+  --radius:12px; --radius-lg:20px;
+  --space-1:4px; --space-2:8px; --space-3:12px; --space-4:16px;
+  --space-5:24px; --space-6:32px; --space-7:48px; --space-8:64px;
+
+  color: var(--text-1);
+  background:
+    radial-gradient(1000px 700px at 90% -10%, rgba(96,165,250,0.10), transparent 60%),
+    radial-gradient(800px 600px at -10% 30%, rgba(34,211,238,0.08), transparent 55%),
+    var(--bg-0);
+  min-height: 100dvh;
+  font-family: Inter, "Plus Jakarta Sans", system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
 }
 
-
-.Container h1{
-    color: rgb(235, 236, 234);
-    font-size: 40px;
-    text-align: center;
-    margin-top: 20px;
-}
-  
-  .fuel-records {
-    display: flex;
-    justify-content: center;
-    gap: 20px;
-    margin-top: 20px;
-  }
-  
-  .fuel-item {
-    background: rgb(188, 6, 6);
-    padding: 20px;
-    border-radius: 10px;
-    text-align: center;
-    width: 200px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-  
-  .fuel-name {
-    font-size: 22px;
-    color: rgb(15, 4, 4);
-    font-weight: bold;
-    width:150px;
-    height:90px;
-    background-color: rgb(216, 204, 171);
-    display: flex;
-    border-radius:10px;
-    margin-top: 3px;
-    
-
-  }
-  
-  .arrow {
-    font-size:30px;
-    margin-bottom:10px;
-    margin-top: 10px;
-
-  }
-  
-  .fuel-amount {
-    font-size: 1.2rem;
-    background: yellow;
-    color: black;
-    padding: 5px 5px;
-    border-radius: 5px;
-    display: flex;
-  }
-  
-  .date-section {
-    display:flex;
-    justify-content: center;
-    align-items: center;
-    font-family: Arial, sans-serif;
-    gap: 20px;
-    color: rgb(221, 196, 196);
-    font-weight: bold;
-    margin-top: 0px;
-    font-size: 25px;
-    background-color: rgb(3, 3, 49);
-  
-  }
-  
-  .date-group {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin-top: 30px;
-    gap:10px;
-
-  }
-  
-  .year-boxes,.Month-boxes,.Day-boxes {
-    display: flex;
-    gap: 5px;
-    margin-top: 5px;
-    counter-reset:white;
-  }
-  
-  
-
-  .digit-box {
-    width: 70px;
-    height: 60px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 30px;
-    font-weight: bold;
-    background-color: #e29858;
-    color:white;
-    border-radius: 5px;
-    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
-  }
-  
-  .fuel-stock {
-    max-width: auto;
-    padding: 40px;
-    width:auto;
-    backdrop-filter:blur(10px);
-    position:relative;
-    background-color:rgb(3, 3, 49);
-    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.2);
-    text-align: center;
-    margin:auto;
-    
-   
-  }
-  
-  h2 {
-    color: #e8e1df;
-    margin-bottom: 10px;
-    margin-top: 0px;
-    font-size:30px;
-    
-  }
-  .box {
-    padding: 30px;
-    background: rgba(250, 250, 246, 0.205);
-    margin: 20px;
-    width:500px;
-    position: relative; 
-    top: 250px; 
-    left: 50%; 
-    transform: translate(-50%, -50%);
-    border: 2px solid #d0df22;
-
-
-  }
-  .fuel-form {
-    display: flex;
-    flex-direction: column;
-    gap: 25px;
-    align-items: center;
-  }
-  
-  .fuel-input {
-    display: flex;
-    flex-direction: column;
-    text-align: left;
-  }
-  
-
-  .daily-image-container {
-  display: flex;
-  justify-content: center;
-  margin: 20px 0;
-}
-
-.daily-image {
-  max-width: 100%;
-  border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-}
-
-  /* #body-img{
-    display: flex;
-    justify-content: center;
-    width: 95%;
-    height: auto;
-    margin-top: 20px;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    object-fit: cover;
-    display: block;
-    margin-left: auto;
-    margin-right: auto;
-  } */
-
-
-  label {
-    font-weight: bold;
-    color:#dfdcdc;
-    font-size: 17px;
-  }
-  
-  input {
-    padding: 10px;
-    font-size: 20px;
-    border: 3px solid #161313;
-    border-radius: 5px;
-    width:400px;
-  }
-  
-  .submit-btn {
-    background-color: #eae9de;
-    color: white;
-    padding: 15px;
-    border: none;
-    font-size: 16px;
-    cursor: pointer;
-    border-radius: 5px;
-    width:420px;
-  }
-  
-  .submit-btn:hover {
-    background-color: #1d1e1a;
-  }
-
-  /* ===== Fuel clickable cards ===== */
-.fuel-cards {
+.Container{
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: var(--space-7) var(--space-4) var(--space-8);
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
-  gap: 16px;
-  margin: 18px 0 28px;
+  gap: var(--space-7);
 }
 
-.fuel-card {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  padding: 14px 16px;
-  border-radius: 14px;
-  background: #121a2a;
-  border: 1px solid #1f2937;
+.page-title{
+  margin: 0;
+  font-size: clamp(1.4rem, 3vw, 2rem);
+  font-weight: 800;
+  letter-spacing: -0.01em;
+}
+
+/* ===== Image block ===== */
+.daily-image-container{
+  border: 1px solid #223043;
+  background: #0F1620;
+  border-radius: var(--radius-lg);
+  padding: var(--space-4);
+  box-shadow: 0 1px 0 rgba(255,255,255,.02), 0 16px 40px rgba(0,0,0,.45);
+}
+.daily-image{
+  width: 100%;
+  height: clamp(220px, 40vw, 420px);
+  object-fit: cover;
+  border-radius: var(--radius);
+  display: block;
+  background: linear-gradient(135deg, #253244 0%, #10161E 100%); /* fallback if image missing */
+}
+
+/* ===== Fuel cards ===== */
+.fuel-cards{
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--space-4);
+}
+@media (max-width: 1100px){
+  .fuel-cards{ grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 640px){
+  .fuel-cards{ grid-template-columns: 1fr; }
+}
+
+.fuel-card{
+  border: 1px solid #223043;
+  background: #111922;
+  border-radius: var(--radius-lg);
+  padding: var(--space-4);
   text-decoration: none;
-  color: inherit;
-  transition: transform .08s ease, box-shadow .2s ease, border-color .2s ease;
+  color: var(--text-1);
+  display: grid;
+  gap: var(--space-4);
+  box-shadow: 0 1px 0 rgba(255,255,255,.02), 0 12px 30px rgba(0,0,0,.35);
+  transition: transform .06s ease, background-color .12s ease, border-color .12s ease, box-shadow .12s ease;
 }
-
-.fuel-card:hover {
+.fuel-card:hover{
   transform: translateY(-2px);
-  border-color: #334155;
-  box-shadow: 0 10px 24px rgba(2, 6, 23, 0.35);
+  background: #152031;
+  border-color: var(--primary-strong);
+  box-shadow: 0 1px 0 rgba(255,255,255,.03), 0 16px 40px rgba(59,130,246,.28);
 }
 
-.fuel-card-top {
-  display: flex;
-  align-items: center;
-  gap: 10px;
+.fuel-card-top{
+  display: flex; align-items: center; gap: 10px;
+}
+.fuel-chip{
+  width: 14px; height: 14px; border-radius: 999px; flex: 0 0 auto;
+  box-shadow: 0 0 0 3px rgba(255,255,255,0.04);
+}
+.fuel-name{
+  font-weight: 700; letter-spacing: .01em;
 }
 
-.fuel-chip {
-  width: 10px;
-  height: 10px;
-  border-radius: 999px;
-  box-shadow: 0 0 0 3px rgba(255,255,255,.06);
+.fuel-card-bottom{
+  display: flex; align-items: center; justify-content: space-between;
+}
+.liters{
+  display: inline-flex; align-items: baseline; gap: 6px;
+}
+.liters strong{ font-size: 1.1rem; }
+.liters span{ color: var(--text-2); }
+
+.cta{
+  font-weight: 700;
+  color: var(--primary);
 }
 
-.fuel-card-bottom {
-  display: flex;
-  align-items: end;
-  justify-content: space-between;
+/* ===== Date section ===== */
+.date-section{
+  border: 1px solid #223043;
+  background: #111922;
+  border-radius: var(--radius-lg);
+  padding: var(--space-5);
+  display: grid;
+  gap: var(--space-5);
+}
+.date-group > span{
+  display: inline-block; margin-bottom: var(--space-2);
+  color: var(--text-2); font-size: .9rem; letter-spacing: .08em;
 }
 
-.fuel-card .liters {
-  font-size: 14px;
+.year-boxes, .Month-boxes, .Day-boxes{
+  display: grid; grid-auto-flow: column; gap: var(--space-2);
+  width: fit-content;
 }
-.fuel-card .liters strong {
-  font-size: 22px;
-  line-height: 1;
-  margin-right: 6px;
+.digit-box{
+  width: 44px; height: 52px;
+  border-radius: 10px;
+  border: 1px solid #243041;
+  background: #0F1620;
+  display: inline-flex; align-items: center; justify-content: center;
+  font-weight: 800; letter-spacing: .03em;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.02);
 }
-
-.fuel-card .cta {
-  font-weight: 600;
-  opacity: .9;
-}
-
-  
- 
-

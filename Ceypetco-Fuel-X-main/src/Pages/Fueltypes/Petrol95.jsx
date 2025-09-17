@@ -1,6 +1,8 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import "./Petrol95.css";
+import Footer from "../../Components/Footer";
+import Header from "../../Components/Header";
 
 const API_BASE = "http://localhost:5000";
 const PRODUCT_NAME = "Lanka Petrol 95 Octane";
@@ -155,141 +157,109 @@ const Petrol95 = () => {
   const inferenceUsed = effectiveRefill !== recordedRefill;
 
   return (
-    <div className="petrol95-container">
-      <nav className="navbar">
-        <div className="logo">
-          <img src="/Ceypetcologo.png" alt="logo" />
-        </div>
-        <ul className="nav-links">
-          <li><Link to="/">Home</Link></li>
-          <li><a href="#">Income & Expenses</a></li>
-          <li><Link to="/petrol95">Daily Details</Link></li>
-          <li><a href="#">Payment</a></li>
-          <li><Link to="/BowserDetails">Bowser Details</Link></li>
-          <li><a href="#">Summary</a></li>
-        </ul>
-        <button className="logout-btn">Logout</button>
-      </nav>
+    <div className="petrol95">
+      {/* Top nav (kept as-is; styled in CSS) */}
+      <Header />
 
-      <div className="details-card">
-        <h1 className="title">Lanka Petrol 95 Octane</h1>
+      <div className="petrol95-container">
+        <div className="details-card">
+          <h1 className="title">Lanka Petrol 95 Octane</h1>
 
-        <p style={{ marginTop: 0 }}>
-          Day: {todayStr}
-          {loading ? " — loading…" : ""}
-        </p>
-        {err && (
-          <p style={{ color: "crimson", fontWeight: 500, marginTop: 4 }}>
-            {err}
+          <p className="muted">
+            Day: {todayStr}
+            {loading ? " — loading…" : ""}
           </p>
-        )}
-
-        {/* Tank snapshot */}
-        <div className="snapshot">
-          <label>Yesterday Last (from API / scan)</label>
-          <input
-            type="text"
-            value={typeof yesterdayLast === "number" ? `${yesterdayLast} ℓ` : "—"}
-            readOnly
-          />
-
-          <label>Today Last (from API / scan)</label>
-          <input
-            type="text"
-            value={typeof todayLast === "number" ? `${todayLast} ℓ` : "—"}
-            readOnly
-          />
-
-          <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-            <label style={{ marginBottom: 0 }}>Change (since yesterday)</label>
-            <span
-              style={{
-                marginLeft: "auto",
-                padding: "2px 8px",
-                borderRadius: 12,
-                fontSize: 12,
-                color: "white",
-                background: changeBadge.bg,
-              }}
-            >
-              {changeBadge.text}
-            </span>
-          </div>
-          <input
-            type="text"
-            value={
-              netChange === null
-                ? "—"
-                : netChange > 0
-                ? `${netChange} ℓ (refilled)`
-                : netChange < 0
-                ? `${Math.abs(netChange)} ℓ used`
-                : "0 ℓ (no change)"
-            }
-            readOnly
-          />
-        </div>
-
-        {/* Today Refilled */}
-        <div className="browser-info">
-          <h3>Today Refilled</h3>
-          <p>
-            <strong>{formatLiters(effectiveRefill)}</strong>
-            {inferenceUsed && (
-              <span style={{ marginLeft: 8, fontSize: 12, color: "#6b7280" }}>
-                (inferred from tank increase)
-              </span>
-            )}
-          </p>
-          <small style={{ color: "#6b7280" }}>
-            Recorded: {formatLiters(recordedRefill)} · Tank Δ (positive): {formatLiters(deltaRefill)}
-          </small>
-
-          {deliveries.length > 0 ? (
-            <div className="browser-list" style={{ marginTop: 8 }}>
-              {deliveries.map((b) => (
-                <div key={b._id} className="browser-row">
-                  <div><strong>Invoice:</strong> {b.invoiceNo || "—"}</div>
-                  <div><strong>Browser No:</strong> {b.browserNo || "—"}</div>
-                  <div><strong>Quantity:</strong> {formatLiters(b.quantity || 0)}</div>
-                  <div><strong>Driver Check:</strong> {b.driverCheck || "—"}</div>
-                  <div><strong>Dealer Check:</strong> {b.dealerCheck || "—"}</div>
-                </div>
-              ))}
-            </div>
-          ) : (
-            <small style={{ color: "#6b7280" }}>
-              No recorded bowser deliveries for {todayStr} ({PRODUCT_NAME}).
-            </small>
+          {err && (
+            <p className="error">{err}</p>
           )}
+
+          {/* Tank snapshot */}
+          <div className="snapshot">
+            <label>Yesterday Last (from API / scan)</label>
+            <input
+              type="text"
+              value={typeof yesterdayLast === "number" ? `${yesterdayLast} ℓ` : "—"}
+              readOnly
+            />
+
+            <label>Today Last (from API / scan)</label>
+            <input
+              type="text"
+              value={typeof todayLast === "number" ? `${todayLast} ℓ` : "—"}
+              readOnly
+            />
+
+            <div className="row">
+              <label style={{ marginBottom: 0 }}>Change (since yesterday)</label>
+              <span className="badge" style={{ background: changeBadge.bg }}>
+                {changeBadge.text}
+              </span>
+            </div>
+            <input
+              type="text"
+              value={
+                netChange === null
+                  ? "—"
+                  : netChange > 0
+                  ? `${netChange} ℓ (refilled)`
+                  : netChange < 0
+                  ? `${Math.abs(netChange)} ℓ used`
+                  : "0 ℓ (no change)"
+              }
+              readOnly
+            />
+          </div>
+
+          {/* Today Refilled */}
+          <div className="browser-info">
+            <h3>Today Refilled</h3>
+            <p className="big">
+              <strong>{formatLiters(effectiveRefill)}</strong>
+              {inferenceUsed && (
+                <span className="hint">
+                  (inferred from tank increase)
+                </span>
+              )}
+            </p>
+            <small className="dim">
+              Recorded: {formatLiters(recordedRefill)} · Tank Δ (positive): {formatLiters(deltaRefill)}
+            </small>
+
+            {deliveries.length > 0 ? (
+              <div className="browser-list">
+                {deliveries.map((b) => (
+                  <div key={b._id || `${b.invoiceNo}-${b.browserNo}-${b.quantity}`} className="browser-row">
+                    <div><strong>Invoice:</strong> {b.invoiceNo || "—"}</div>
+                    <div><strong>Browser No:</strong> {b.browserNo || "—"}</div>
+                    <div><strong>Quantity:</strong> {formatLiters(b.quantity || 0)}</div>
+                    <div><strong>Driver Check:</strong> {b.driverCheck || "—"}</div>
+                    <div><strong>Dealer Check:</strong> {b.dealerCheck || "—"}</div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <small className="dim">
+                No recorded bowser deliveries for {todayStr} ({PRODUCT_NAME}).
+              </small>
+            )}
+          </div>
+
+          {/* Today Fuel Expenditure */}
+          <div className="expenditure">
+            <h3>Today Fuel Expenditure</h3>
+            <p className="big"><strong>{formatLiters(usageLiters)}</strong></p>
+            <small className="dim">usage = (Yesterday + Today Refilled) − Today.</small>
+          </div>
+
+          {/* Navigation */}
+          <div className="nav-buttons">
+            <Link to="/Petrol92"><button className="ghost-btn">Octane 92 Petrol</button></Link>
+            <Link to="/Diesel"><button className="ghost-btn">Lanka Auto Diesel</button></Link>
+            <Link to="/SuperDiesel"><button className="ghost-btn">Super Diesel</button></Link>
+          </div>
         </div>
-
-        {/* Today Fuel Expenditure */}
-        <div className="expenditure">
-          <h3>Today Fuel Expenditure</h3>
-          <p><strong>{formatLiters(usageLiters)}</strong></p>
-          <small style={{ color: "#6b7280" }}>
-            usage = (Yesterday + Today Refilled) − Today.
-          </small>
-        </div>
-
-        {/* Navigation */}
-        <Link to="/Petrol92">
-          <button className="octane92-btn">Octane 92 Petrol</button>
-          <br />
-          <br />
-        </Link>
-
-        <Link to="/Diesel">
-          <button className="diesel-btn">Lanka Auto Diesel</button>
-          <br />
-          <br />
-        </Link>
-
-        <Link to="/SuperDiesel">
-          <button className="SuperDiesel-btn">Super Diesel</button>
-        </Link>
       </div>
+      <Footer />
     </div>
   );
 };

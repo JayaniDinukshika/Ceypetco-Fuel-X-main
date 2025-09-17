@@ -4,8 +4,7 @@ import './Body.css';
 import Header from '../../Components/Header';
 import Footer from '../../Components/Footer';
 
-// 👇 import the image
-//import dailyDetailsImage from 'public/dailydetails.jpg';
+// const dailyDetailsImage = '/dailydetails.jpg'; // if you want to use an import, keep in /public
 
 const FUEL_TYPES = [
   'Lanka Petrol 92 Octane',
@@ -74,38 +73,59 @@ const Body = () => {
   }, []);
 
   useEffect(() => {
-    const y = new Date().getFullYear().toString();
+    const now = new Date();
+    const y = now.getFullYear().toString();
     setYearDigits(y.split(''));
-    const m = (new Date().getMonth() + 1).toString().padStart(2, '0');
+    const m = (now.getMonth() + 1).toString().padStart(2, '0');
     setMonthDigits(m.split(''));
-    const d = new Date().getDate().toString().padStart(2, '0');
+    const d = now.getDate().toString().padStart(2, '0');
     setDayDigits(d.split(''));
   }, []);
 
   const fmt = n => Number(n || 0).toLocaleString();
 
   return (
-    <div className="body">
+    <div className="body" data-theme="dark">
       <Header />
-      <div className="Container">
-        <h1>Daily Records</h1>
 
-        {/* 👇 Show the image */}
+      <div className="Container">
+        <h1 className="page-title">Daily Records</h1>
+
+        {/* Image */}
         <div className="daily-image-container">
           {/* <img src={dailyDetailsImage} alt="Daily Details" className="daily-image" /> */}
-          <div><img src="/dailydetails.jpg" alt="Fuel Station" loading="lazy"className="daily-image" /></div>
+          <img
+            src="/dailydetails.jpg"
+            alt="Daily details cover"
+            loading="lazy"
+            className="daily-image"
+            onError={e => { e.currentTarget.style.display = 'none'; }}
+          />
         </div>
 
+        {/* Fuel cards */}
         <div className="fuel-cards">
           {FUEL_TYPES.map(ft => (
-            <Link key={ft} to={ROUTES[ft]} className="fuel-card" title={`Open ${ft}`}>
+            <Link
+              key={ft}
+              to={ROUTES[ft]}
+              className="fuel-card"
+              title={`Open ${ft}`}
+            >
               <div className="fuel-card-top">
                 <span className="fuel-chip" style={{ backgroundColor: COLORS[ft] }} />
                 <span className="fuel-name">{ft}</span>
               </div>
+
               <div className="fuel-card-bottom">
-                <div className="liters">
-                  {loading ? 'Loading…' : <><strong>{fmt(fuelStock[ft])}</strong> <span>Liters</span></>}
+                <div className="liters" aria-live="polite">
+                  {loading ? (
+                    'Loading…'
+                  ) : (
+                    <>
+                      <strong>{fmt(fuelStock[ft])}</strong> <span>Liters</span>
+                    </>
+                  )}
                 </div>
                 <div className="cta">Open →</div>
               </div>
@@ -113,7 +133,7 @@ const Body = () => {
           ))}
         </div>
 
-        {/* Date section remains the same */}
+        {/* Date */}
         <div className="date-section">
           <div className="date-group">
             <span>YEAR</span>
@@ -123,6 +143,7 @@ const Body = () => {
               ))}
             </div>
           </div>
+
           <div className="date-group">
             <span>MONTH</span>
             <div className="Month-boxes">
@@ -131,6 +152,7 @@ const Body = () => {
               ))}
             </div>
           </div>
+
           <div className="date-group">
             <span>DAY</span>
             <div className="Day-boxes">
@@ -141,6 +163,7 @@ const Body = () => {
           </div>
         </div>
       </div>
+
       <Footer />
     </div>
   );
