@@ -1,11 +1,10 @@
-// src/Components/Footer.jsx
 import React from 'react';
 import './Footer.css';
 import { FaFacebookF, FaTwitter, FaLinkedinIn, FaInstagram } from 'react-icons/fa';
 
 const Footer = () => {
   return (
-    <footer className="footer">
+    <footer className="footer" data-theme="dark">
       <div className="footer-container">
 
         <div className="footer-section brand">
@@ -26,13 +25,8 @@ const Footer = () => {
         <div className="footer-section contact">
           <h3>Contact</h3>
           <p>Email: support@ceypetco.lk</p>
-          <p>Phone: +94 11 234 5678</p>
-          <div className="social-icons">
-            <a href="#"><FaFacebookF /></a>
-            <a href="#"><FaTwitter /></a>
-            <a href="#"><FaLinkedinIn /></a>
-            <a href="#"><FaInstagram /></a>
-          </div>
+          <p>Phone: +94 762826977</p>
+          
         </div>
       </div>
 

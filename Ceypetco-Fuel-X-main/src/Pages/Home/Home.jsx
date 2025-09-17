@@ -31,33 +31,42 @@ const HomePage = () => {
   };
 
   return (
-    <div className="homepage">
+    <div className="homepage" data-theme="dark">
       <Header />
+
       <div className="content">
         {data ? (
-          <h2>Fuel Station ID: {data.station_id} | {data.location}</h2>
+          <h2 className="stationTitle">
+            Fuel Station ID: {data.station_id} | {data.location}
+          </h2>
         ) : (
-          <p></p>
+          <p className="stationPlaceholder"></p>
         )}
 
         <div className="carousel-container">
           <Slider {...sliderSettings}>
-            <div><img src="/station.jpg" alt="Fuel Station" loading="lazy" /></div>
-            <div><img src="/tanker.jpg" alt="Fuel Tanker" loading="lazy" /></div>
-            <div><img src="/fueling.jpg" alt="Fueling Car" loading="lazy" /></div>
+            <div className="slide">
+              <img src="/station.jpg" alt="Fuel Station" loading="lazy" />
+            </div>
+            <div className="slide">
+              <img src="/tanker.jpg" alt="Fuel Tanker" loading="lazy" />
+            </div>
+            <div className="slide">
+              <img src="/fueling.jpg" alt="Fueling Car" loading="lazy" />
+            </div>
           </Slider>
         </div>
 
         <div className="buttons">
-          <Link to="/Daily%20Details"><button className="btn">Daily Records</button></Link><br></br>
-          <Link to="/Payment"><button className="btn">Payment</button></Link><br></br>
-          <Link to="/Browser%20Details"><button className="btn">Bowser Details</button></Link><br></br>
-          <Link to="/IncomeExpenses"><button className="btn">Income & Expenses</button></Link><br></br>
-          <Link to="/Summary"><button className="btn">Summary Records</button></Link><br></br>
-          <Link to="/EmployeeProfile"><button className="btn">Employee Profile</button></Link><br></br>
-          
+          <Link to="/Daily%20Details"><button className="btn">Daily Records</button></Link><br />
+          <Link to="/Payment"><button className="btn">Payment</button></Link><br />
+          <Link to="/Browser%20Details"><button className="btn">Bowser Details</button></Link><br />
+          <Link to="/IncomeExpenses"><button className="btn">Income & Expenses</button></Link><br />
+          <Link to="/Summary"><button className="btn">Summary Records</button></Link><br />
+          <Link to="/EmployeeProfile"><button className="btn">Employee Profile</button></Link><br />
         </div>
       </div>
+
       <Footer />
     </div>
   );
